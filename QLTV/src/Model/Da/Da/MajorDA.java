@@ -44,7 +44,7 @@ public class MajorDA {
         String sql = "SELECT * FROM majors where fac_id=?";
         PreparedStatement stmt = (PreparedStatement) con.prepareStatement(sql);
         stmt.setInt(1, facID);
-        ResultSet rs = stmt.executeQuery(sql);
+        ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
             Major major = new Major(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4), rs.getString(5));
             listMajor.add(major);

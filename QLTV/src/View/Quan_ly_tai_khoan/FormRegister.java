@@ -5,6 +5,8 @@ import Model.Da.Da.UserDA;
 import Model.Da.Faculty;
 import Model.Da.Major;
 import Model.Da.School;
+import Model.Da.User;
+import View.Thong_bao.Message;
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.CheckboxGroup;
@@ -36,13 +38,20 @@ import net.miginfocom.swing.MigLayout;
 
 public class FormRegister<T> extends JFrame {
 
-    private JTextField txtUsername, txtPasswordAgain, txtEmail, txtMsv, txtPhoneNumber, txtNienKhoa;
+    private JTextField txtUsername, txtPasswordAgain, txtEmail, txtMsv;
     private JPasswordField txtPassword;
     private JButton btnResgister, btnCancel;
+    
+    private int sch_id=-1;
+    private int fac_id=-1;
+    private int maj_id=-1;
+    
     private boolean isLoading = false;
+    
     private JComboBox cbxListSchool = new JComboBox();
     private JComboBox cbxListFaculty = new JComboBox();
     private JComboBox cbxListMajor = new JComboBox();
+    
     public UserController userController;
 
     public ArrayList<School> listSchool;
@@ -65,8 +74,6 @@ public class FormRegister<T> extends JFrame {
         listMajor = userController.getListMajor();
 
         loadCombobox((ArrayList<T>) listSchool, cbxListSchool, 1);
-        //loadCombobox((ArrayList<T>)listFaculty, cbxListFaculty);
-        //loadCombobox((ArrayList<T>)listMajor, cbxListMajor);
 
         JPanel contend = new JPanel();
         contend.setLayout(new MigLayout("", "[][grow]", "[][]"));
@@ -91,37 +98,27 @@ public class FormRegister<T> extends JFrame {
         txtMsv = new JTextField();
         contend.add(txtMsv, "cell 1 3,growx");
 
-        JLabel lblPhoneNumber = new JLabel("Số điện thoại*");
-        contend.add(lblPhoneNumber, "cell 0 4,alignx trailing");
-        txtPhoneNumber = new JTextField();
-        contend.add(txtPhoneNumber, "cell 1 4,growx");
-
         JLabel lblEmail = new JLabel("Email*");
-        contend.add(lblEmail, "cell 0 5,alignx trailing");
+        contend.add(lblEmail, "cell 0 4,alignx trailing");
         txtEmail = new JTextField();
-        contend.add(txtEmail, "cell 1 5,growx");
-
-        JLabel lblNien_khoa = new JLabel("Niên khóa*");
-        contend.add(lblNien_khoa, "cell 0 6,alignx trailing");
-        txtNienKhoa = new JTextField();
-        contend.add(txtNienKhoa, "cell 1 6,growx");
+        contend.add(txtEmail, "cell 1 4,growx");
 
         JLabel lblSchool = new JLabel("Trường*");
-        contend.add(lblSchool, "cell 0 7,alignx trailing");
-        contend.add(cbxListSchool, "cell 1 7,growx");
+        contend.add(lblSchool, "cell 0 5,alignx trailing");
+        contend.add(cbxListSchool, "cell 1 5,growx");
 
         JLabel lblFaculty = new JLabel("Khoa*");
-        contend.add(lblFaculty, "cell 0 8,alignx trailing");
-        contend.add(cbxListFaculty, "cell 1 8,growx");
+        contend.add(lblFaculty, "cell 0 6,alignx trailing");
+        contend.add(cbxListFaculty, "cell 1 6,growx");
 
         JLabel lblMarjor = new JLabel("Ngành*");
-        contend.add(lblMarjor, "cell 0 9,alignx trailing");
-        contend.add(cbxListMajor, "cell 1 9,growx");
+        contend.add(lblMarjor, "cell 0 7,alignx trailing");
+        contend.add(cbxListMajor, "cell 1 7,growx");
 
         btnResgister = new JButton("Đăng Ký");
         btnCancel = new JButton("Thoát");
-        contend.add(btnResgister, "cell 1 10,growx");
-        contend.add(btnCancel, "cell 1 10,growx");
+        contend.add(btnResgister, "cell 1 8,growx");
+        contend.add(btnCancel, "cell 1 8,growx");
         contend.setBackground(new Color(0f, 0f, 0f, 0f));
         contend.setBorder(BorderFactory.createEmptyBorder(30, 400, 0, 0));
 
@@ -130,33 +127,37 @@ public class FormRegister<T> extends JFrame {
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setVisible(true);
+
         actionListener();
+
     }
 
+    // type = 1 : truong
+    // type = 2: khoa
+    // type = 3 : nganh
     public void loadCombobox(ArrayList<T> list, JComboBox cbx, int type) {
-        if (list.size() <= 0) {
+        cbx.removeAllItems();
+        if (list.size() == 0) {
             return;
         }
         for (T x : list) {
             if (type == 1) {
                 School school = new School();
                 school = (School) x;
-                cbx.addItem(school.getName());
-                cbx.setSelectedItem(school);
+                cbx.addItem(school.getId() + " - " + school.getName());
             }
             if (type == 2) {
                 Faculty fac = new Faculty();
                 fac = (Faculty) x;
-                cbx.addItem(fac.getName());
-                cbx.setSelectedItem(fac);
+                cbx.addItem(fac.getId() + " - " + fac.getName());
             }
             if (type == 3) {
                 Major major = new Major();
                 major = (Major) x;
-                cbx.addItem(major.getName());
-                cbx.setSelectedItem(major);
+                cbx.addItem(major.getId() + " - " + major.getName());
             }
         }
+        cbx.setSelectedItem(null);
     }
 
     public void actionListener() {
@@ -172,59 +173,64 @@ public class FormRegister<T> extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 UserDA userDa = new UserDA();
-                JDialog f = new JDialog();
-                //  try {
-                // boolean isAddSucess = itemDa.addUser(
-                //        new User(txtUsername.getText(), txtPassword.getText(), txtEmail.getText(), 0));
-                // if (isAddSucess) {
-                //     MenuComponent menuComponent = new MenuComponent(); 
-                //      self.dispose();
-                //  } else {
-                //      JOptionPane.showMessageDialog(f, "Đăng kí thất bại!");
+                Message mes = new Message();
+                User us = new User(txtUsername.getText(), "", -1,
+                        Integer.valueOf(txtMsv.getText()),
+                        txtEmail.getText(),
+                        -1,
+                        txtPassword.getText(), 2,
+                        sch_id,
+                        maj_id,
+                        fac_id);
+                boolean addSuccess = userDa.create(us);
+                if(!addSuccess){
+                    mes.showMessage("error","Đăng ký không thành công");
+                }else{
+                    FormLogin formLogin = new FormLogin();
+                    self.dispose();
+                }
             }
-            //   } catch (SQLException ex) {
-            //      ex.printStackTrace();
-            //      JOptionPane.showMessageDialog(f, "Error");
-            // }
-            // }
         });
         cbxListSchool.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("cbxListSchool == " + cbxListSchool.getSelectedIndex());
-              //  try {
-                 //   listFaculty = userController.getListFacultyBySchId(cbxListSchool.getSelectedIndex());
-
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(FormRegister.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//                if (listFaculty == null || listFaculty.size() == 0) {
-//                    return;
-//                }
-               // loadCombobox((ArrayList<T>) listFaculty, cbxListFaculty, 2);
+                String itemSelected = cbxListSchool.getSelectedItem().toString();
+                sch_id = Regex.findNumber(itemSelected);
+                try {
+                    listFaculty = userController.getListFacultyBySchId(sch_id);
+                    loadCombobox((ArrayList<T>) listFaculty, cbxListFaculty, 2);
+                    cbxListFaculty.setSelectedItem(null);
+                } catch (SQLException ex) {
+                    Logger.getLogger(FormRegister.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         cbxListFaculty.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("cbxListFaculty == " + cbxListSchool.getSelectedIndex());
-               // try {
-                   // listMajor = userController.getListMajorByFacId(cbxListFaculty.getSelectedIndex());
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(FormRegister.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//                if (listMajor == null || listMajor.size() == 0) {
-//                    return;
-//                }
-                //loadCombobox((ArrayList<T>) listMajor, cbxListMajor, 3);
+                Object itemSelected = cbxListFaculty.getSelectedItem();
+                if (itemSelected != null) {
+                    try {
+                        fac_id = Regex.findNumber(itemSelected.toString());
+                        listMajor = userController.getListMajorByFacId(fac_id);
+                        loadCombobox((ArrayList<T>) listMajor, cbxListMajor, 3);
+                        cbxListMajor.setSelectedItem(null);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(FormRegister.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         });
         cbxListMajor.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                Object itemSelected = cbxListMajor.getSelectedItem();
+                if (itemSelected != null) {
+                    maj_id = Regex.findNumber(itemSelected.toString());
+                }
             }
         });
     }

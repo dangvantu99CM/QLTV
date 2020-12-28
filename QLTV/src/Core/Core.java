@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Model.Da;
+package Core;
 
 /**
  *
  * @author tudv
  */
-public class Author {
+public class Core {
     
 }

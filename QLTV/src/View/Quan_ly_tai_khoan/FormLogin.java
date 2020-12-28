@@ -2,6 +2,7 @@ package View.Quan_ly_tai_khoan;
 
 import Controller.Quan_ly_tai_khoan.UserController;
 import Model.Da.Da.UserDA;
+import View.Thong_bao.Message;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Label;
@@ -61,7 +62,7 @@ public class FormLogin extends JFrame{
         JPanel contend = new JPanel();
         contend.setLayout(new MigLayout("", "[][grow]", "[][]"));
 
-        lblUsername = new JLabel("Tài khoản");
+        lblUsername = new JLabel("Email");
         lblPassword = new JLabel("Mật khẩu");
         btnLogin = new JButton("Đăng nhập");
         //lblMemory = new JLabel("Ghi nhớ mật khẩu");
@@ -110,22 +111,23 @@ public class FormLogin extends JFrame{
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JDialog f = new JDialog();
+                Message mes = new Message();
                 try {
                     if (userController.login(getTxtUsername().getText(), getTxtPassword().getText())) {
                         System.out.println("Login correct !");
                         self.dispose();
                     } else {
-                        JOptionPane.showMessageDialog(f, "Đăng nhập không thành công");
+                        mes.showMessage("success","Đăng nhập không thành công");
                     }
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(f, "Đăng nhập không thành công");
+                    mes.showMessage("error","Đăng nhập không thành công");
                 }
             }
         });
         lblForgetPassword.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 FormForgotPassWord formForgotPass = new FormForgotPassWord();
+                self.dispose();
             }
         });
         lblCreateAccount.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -157,6 +159,7 @@ public class FormLogin extends JFrame{
         this.getTxtUsername().setText(name);
     }
     
-
-
+    public static void main(String[]args){
+        FormLogin fl = new FormLogin();
+    }
 }

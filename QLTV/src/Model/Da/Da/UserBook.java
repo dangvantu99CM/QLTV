@@ -22,15 +22,14 @@ import java.util.logging.Logger;
  *
  * @author tudv
  */
-public class UserDA implements MyInterface {
+public class UserBook implements MyInterface {
 
-    public UserDA() {
-    }
+    public UserBook() {}
 
     private Connection con = ConnectDb.connectDB();
     public static ArrayList<User> listUser = null;
     private Message mess = new Message();
-    
+
     @Override
     public ArrayList getAll() {
         listUser = new ArrayList<User>();
@@ -143,8 +142,7 @@ public class UserDA implements MyInterface {
         }
         return result;
     }
-    
-    
+
     public boolean checkLogin(String email, String password) throws SQLException {
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
@@ -168,6 +166,5 @@ public class UserDA implements MyInterface {
             System.out.println("user==============" + u.getName());
         }
     }
-
 
 }

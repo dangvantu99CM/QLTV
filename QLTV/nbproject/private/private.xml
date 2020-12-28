@@ -3,18 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Henry/Documents/NetBeansProjects/ManagerLibary/src/Model/Da/User.java</file>
-            <file>file:/C:/Users/Henry/Documents/NetBeansProjects/ManagerLibary/src/Model/Da/Book.java</file>
-            <file>file:/C:/Users/Henry/Documents/NetBeansProjects/ManagerLibary/src/View/Quan_ly_tai_khoan/Register.java</file>
-            <file>file:/C:/Users/Henry/Documents/NetBeansProjects/ManagerLibary/src/Model/Da/Author.java</file>
-            <file>file:/C:/Users/Henry/Documents/NetBeansProjects/ManagerLibary/src/Database/ConnectDb.java</file>
-            <file>file:/C:/Users/Henry/Documents/NetBeansProjects/ManagerLibary/src/Model/Da/Da/UserDA.java</file>
-            <file>file:/C:/Users/Henry/Documents/NetBeansProjects/ManagerLibary/src/asset/img/vnu.PNG</file>
-            <file>file:/C:/Users/Henry/Documents/NetBeansProjects/ManagerLibary/src/View/Quan_ly_tai_khoan/FormLogin.java</file>
-            <file>file:/C:/Users/Henry/Documents/NetBeansProjects/ManagerLibary/src/Model/Da/School.java</file>
-            <file>file:/C:/Users/Henry/Documents/NetBeansProjects/ManagerLibary/src/Model/Da/Major.java</file>
-            <file>file:/C:/Users/Henry/Documents/NetBeansProjects/ManagerLibary/src/Model/Da/Faculty.java</file>
-            <file>file:/C:/Users/Henry/Documents/NetBeansProjects/ManagerLibary/src/Model/Da/Store.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Core/Core.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/View/Quan_ly_tai_khoan/FormLogin.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Model/Da/User.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Controller/Quan_ly_tai_khoan/UserController.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/View/Quan_ly_nguoi_dung/ListUser.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/View/Quan_ly_tai_khoan/FormForgotPassWord.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/View/Thong_bao/Message.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Model/Da/Da/SchoolDA.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/View/Quan_ly_tai_khoan/FormRegister.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/App/App.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Interface/UserInterface/MyInterface.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Model/Da/Da/UserDA.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Database/ConnectDb.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Core/BinaryTree.java</file>
         </group>
     </open-files>
 </project-private>

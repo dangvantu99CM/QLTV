@@ -10,6 +10,8 @@ package Model.Da;
  * @author tudv
  */
 public class User {
+
+    private int id;
     private String name;
     private String address;
     private int gender;
@@ -22,24 +24,22 @@ public class User {
     private int id_school;
     private int id_major;
     private int id_faculty;
-    
-    public User(String name,String address,
-            int gender,int masv,String email,
-            int phone_number,String nien_khoa,
-            String password,int role,int id_school,
-            int id_major,int id_faculty){
-            this.name = name;           
-            this.address = address;
-            this.gender = gender;
-            this.masv = masv;
-            this.email = email;
-            this.phone_number = phone_number;
-            this.nien_khoa = nien_khoa;
-            this.password = password;
-            this.role = role;
-            this.id_school = id_school;     
-            this.id_school = id_major;
-            this.id_school = id_faculty;
+
+    public User(String name, String address,
+            int gender, int masv, String email,
+            int phone_number, String password, int role, int id_school,
+            int id_major, int id_faculty) {
+        this.name = name;
+        this.address = address;
+        this.gender = gender;
+        this.masv = masv;
+        this.email = email;
+        this.phone_number = phone_number;
+        this.password = password;
+        this.role = role;
+        this.id_school = id_school;
+        this.id_major = id_major;
+        this.id_faculty = id_faculty;
     }
 
     /**
@@ -47,6 +47,17 @@ public class User {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getID() {
+        return id;
+    }
+    
+    public void setID(int id){
+        this.id = id;
     }
 
     /**
@@ -209,6 +220,15 @@ public class User {
     public void setId_faculty(int id_faculty) {
         this.id_faculty = id_faculty;
     }
- 
-    
+
+    public String toString() {
+        String user = "[" + " id " + "=> " + this.getID()
+                + " ,name " + "=> " + this.getName()
+                + " ,msv " + "=> " + this.getMasv()
+                + " ,email " + "=> " + this.getEmail()
+                + " ,name " + "=> " + this.getName() 
+                + " ]";
+        return user;
+    }
+
 }

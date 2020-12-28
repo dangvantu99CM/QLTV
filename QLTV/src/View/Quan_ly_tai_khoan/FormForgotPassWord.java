@@ -1,4 +1,4 @@
-package login.FormFotGotPassWord;
+package View.Quan_ly_tai_khoan;
 
 import java.awt.Checkbox;
 import java.awt.event.ActionEvent;
@@ -40,6 +40,13 @@ public class FormForgotPassWord extends JFrame{
            @Override
            public void actionPerformed(ActionEvent e) {
                self.dispose();
+               FormLogin formLogin = new FormLogin();
+           }
+        });
+        btnSendEmail.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               System.out.println("submit====");
            }
         });
     }
