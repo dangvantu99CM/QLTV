@@ -169,21 +169,26 @@ public class FormRegister<T> extends JFrame {
                 self.dispose();
             }
         });
+        
         btnResgister.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 UserDA userDa = new UserDA();
                 Message mes = new Message();
-                User us = new User(txtUsername.getText(), "", -1,
-                        Integer.valueOf(txtMsv.getText()),
-                        txtEmail.getText(),
-                        -1,
-                        txtPassword.getText(), 2,
-                        sch_id,
-                        maj_id,
-                        fac_id);
-                boolean addSuccess = userDa.create(us);
-                if(!addSuccess){
+                
+                User us = new User();
+                
+                us.setEmail(txtEmail.getText());
+                us.setName(txtUsername.getText());
+                us.setId_faculty(fac_id);
+                us.setId_major(maj_id);
+                us.setId_school(sch_id);
+                us.setPassword(txtPassword.getText());
+                us.setRole(2);
+                us.setMasv(Integer.valueOf(txtMsv.getText()));
+                
+                User addUser = userDa.create(us);
+                if(addUser != null){
                     mes.showMessage("error","Đăng ký không thành công");
                 }else{
                     FormLogin formLogin = new FormLogin();

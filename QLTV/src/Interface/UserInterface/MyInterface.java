@@ -15,9 +15,9 @@ public interface MyInterface<T> {
 
     public ArrayList<T> getAll();
     
-    public boolean create(T item);
+    public T create(T item);
 
-    public boolean delete(T item);
+    public T delete(int id);
 
-    public boolean update(T item);
+    public T update(int id);
 }

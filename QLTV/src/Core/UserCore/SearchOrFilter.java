@@ -50,7 +50,7 @@ public class SearchOrFilter {
                     sql = "SELECT * FROM user WHERE us_name = ?";
                     flag = 1;
                 } else {
-                    return baseListUser;
+                    return null;
                 }
             } else if (name.equals("")) {
                 sql = "SELECT * FROM user WHERE us_code_student = ?";
@@ -59,8 +59,8 @@ public class SearchOrFilter {
                 sql = "SELECT * FROM user WHERE us_code_student = ? AND us_name = ?";
                 flag = 3;
             }
-            if(flag==0){
-                return baseListUser;
+            if (flag == 0) {
+                return null;
             }
             java.sql.PreparedStatement stmt = con.prepareStatement(sql);
             switch (flag) {
@@ -78,14 +78,19 @@ public class SearchOrFilter {
             }
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                User user = new User(rs.getString(2),
-                        rs.getString(3), rs.getInt(4), rs.getInt(5),
-                        rs.getString(6), rs.getInt(7), rs.getString(8),
-                        rs.getInt(10), rs.getInt(11), rs.getInt(12), rs.getInt(13));
+                User user = new User();
+                user.setEmail(rs.getString(6));
+                user.setId_faculty(rs.getInt(11));
+                user.setId_major(rs.getInt(14));
+                user.setId_school(15);
+                user.setMasv(rs.getInt(5));
+                user.setName(rs.getString(2));
+                user.setDeletedAt(rs.getString(16));
+                user.setRole(rs.getInt(8));
                 result.add(user);
             }
         }
-        return result.size()>0 ? result : baseListUser;
+        return result;
     }
 
     /**
@@ -108,10 +113,20 @@ public class SearchOrFilter {
             return baseListUser;
         } else {
             if (!status.equals("")) {
-                sql = "SELECT * FROM user_book join user on user.id = user_book.us_id WHERE status = ? AND date_borrow >= ? AND date_borrow <= ?";
+                sql = "SELECT user.* "
+                        + "FROM user_book "
+                        + "join user on user.id = user_book.us_id "
+                        + "WHERE status = ? "
+                        + "AND date_borrow >= ? "
+                        + "AND date_borrow <= ?"
+                        + "AND deleted_at is null";
                 flag = 1;
             } else {
-                sql = "SELECT * FROM user_book join user on user.id = user_book.us_id WHERE date_borrow >= ? AND date_borrow <= ?";
+                sql = "SELECT user.* "
+                        + "FROM user_book join user on user.id = user_book.us_id "
+                        + "WHERE date_borrow >= ? "
+                        + "AND date_borrow <= ?"
+                        + "AND deleted_at is null";
                 flag = 2;
             }
             if (flag == 0) {
@@ -132,32 +147,47 @@ public class SearchOrFilter {
             }
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                User user = new User(rs.getString(12),
-                        rs.getString(13), -1, rs.getInt(15),
-                        rs.getString(16), -1, rs.getString(23), rs.getInt(18),
-                        rs.getInt(25), rs.getInt(24), rs.getInt(21));
-                user.setID(rs.getInt(1));
+                User user = new User();
+                user.setEmail(rs.getString(6));
+                user.setId_faculty(rs.getInt(11));
+                user.setId_major(rs.getInt(14));
+                user.setId_school(15);
+                user.setMasv(rs.getInt(5));
+                user.setName(rs.getString(2));
+                user.setDeletedAt(rs.getString(16));
+                user.setRole(rs.getInt(8));
                 result.add(user);
             }
         }
         return result.size() > 0 ? result : baseListUser;
     }
-    
-    public boolean deleteUser(User u){
-        return userDA.delete(u);
+    /**
+     * 
+     * @param id
+     * @return User deleted
+     */
+    public User deleteUser(int id) {
+        return userDA.delete(id);
     }
-
+    /**
+     * 
+     * @param id
+     * @return User updated
+     */
+    public User updateUser(int id){
+        return userDA.update(id);
+    }
+    
     public void print(ArrayList<User> list) {
         for (User u : list) {
             System.out.println(u.toString());
         }
     }
-    
-    
 
     public static void main(String[] args) throws SQLException {
         SearchOrFilter sf = new SearchOrFilter();
-        //sf.print(sf.filterUser("", "sdas", "1"));
-        sf.print(sf.serchUser("17000746", "Alexender_dai_de"));
+       // sf.print(sf.filterUser("", "2020-12-30 18:15:35", ""));
+        //sf.print(sf.serchUser("17000746", ""));
+        System.out.println(sf.deleteUser(21));
     }
 }
