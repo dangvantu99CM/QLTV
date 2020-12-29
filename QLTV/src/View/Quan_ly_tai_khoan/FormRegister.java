@@ -188,7 +188,7 @@ public class FormRegister<T> extends JFrame {
                 us.setMasv(Integer.valueOf(txtMsv.getText()));
                 
                 User addUser = userDa.create(us);
-                if(addUser != null){
+                if(addUser == null){
                     mes.showMessage("error","Đăng ký không thành công");
                 }else{
                     FormLogin formLogin = new FormLogin();

@@ -9,12 +9,14 @@ import Database.ConnectDb;
 import Model.Da.Da.UserDA;
 import Model.Da.User;
 import Model.Da.UserBook;
+import Model.Da.UserExtension;
 import View.Thong_bao.Message;
 import com.mysql.jdbc.Statement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import org.omg.CORBA.UserException;
 
 /**
  *
@@ -27,9 +29,7 @@ public class SearchOrFilter {
 
     private UserDA userDA = new UserDA();
 
-    private ArrayList<User> result = null;
-
-    private ArrayList<User> baseListUser = userDA.getAll();
+    private ArrayList<UserExtension> baseListUser = userDA.getAll();
 
     /**
      *
@@ -38,8 +38,8 @@ public class SearchOrFilter {
      * @return User tuong ung voi ma sinh vien , Hoac danh sach sinh vien trung
      * ten neu msv la rong
      */
-    public ArrayList<User> serchUser(String msv, String name) throws SQLException {
-        result = new ArrayList<User>();
+    public ArrayList searchUser(String msv, String name) throws SQLException {
+        ArrayList<UserExtension> result = new ArrayList<UserExtension>();
         int flag = 0;
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
@@ -47,20 +47,32 @@ public class SearchOrFilter {
             String sql = "";
             if (msv.equals("")) {
                 if (!name.equals("")) {
-                    sql = "SELECT * FROM user WHERE us_name = ?";
+                    sql = "SELECT * FROM user "
+                            + "left join user_book "
+                            + "on user.id = user_book.us_id "
+                            + "where user.deleted_at is null "
+                            + "and user.us_name = ? "
+                            + "group by user.id";
                     flag = 1;
                 } else {
-                    return null;
+                    return baseListUser;
                 }
             } else if (name.equals("")) {
-                sql = "SELECT * FROM user WHERE us_code_student = ?";
+                sql = "SELECT * FROM user "
+                        + "left join user_book "
+                        + "on user.id = user_book.us_id "
+                        + "where user.deleted_at is null "
+                        + "and user.us_code_student = ? "
+                        + "group by user.id";
                 flag = 2;
             } else {
-                sql = "SELECT * FROM user WHERE us_code_student = ? AND us_name = ?";
+                sql = "SELECT * FROM user "
+                        + "left join user_book "
+                        + "on user.id = user_book.us_id "
+                        + "where user.deleted_at is null "
+                        + "and us_code_student = ? AND us_name = ? "
+                        + "group by user.id";
                 flag = 3;
-            }
-            if (flag == 0) {
-                return null;
             }
             java.sql.PreparedStatement stmt = con.prepareStatement(sql);
             switch (flag) {
@@ -78,7 +90,7 @@ public class SearchOrFilter {
             }
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                User user = new User();
+                UserExtension user = new UserExtension();
                 user.setEmail(rs.getString(6));
                 user.setId_faculty(rs.getInt(11));
                 user.setId_major(rs.getInt(14));
@@ -87,6 +99,8 @@ public class SearchOrFilter {
                 user.setName(rs.getString(2));
                 user.setDeletedAt(rs.getString(16));
                 user.setRole(rs.getInt(8));
+                user.setDateBorrow(rs.getString(20));
+                user.setUserBookStatus(rs.getString(22));
                 result.add(user);
             }
         }
@@ -100,36 +114,50 @@ public class SearchOrFilter {
      * @param status : loc theo trang thai : dang muon , da tra, qua han
      * @return Danh sach User phu hop
      */
-    public ArrayList<User> filterUser(String from_date, String to_date, String status) throws SQLException {
-        result = new ArrayList<User>();
+    public ArrayList filterUser(String from_date, String to_date, String status) throws SQLException {
+        ArrayList<UserExtension> result = new ArrayList<UserExtension>();
         String sql = "";
         int flag = 0;
-        if (from_date.equals("") || to_date.equals("")) {
-            mess.showMessage("error", "Hãy chọn khoảng thời gian cần lọc!");
+        if ((from_date.equals("") && !to_date.equals("")) || (!from_date.equals("") && to_date.equals(""))) {
+            mess.showMessage("error", "Hay chon khoang thoi gian can loc");
             return baseListUser;
         }
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
             return baseListUser;
         } else {
-            if (!status.equals("")) {
-                sql = "SELECT user.* "
+            if (!from_date.equals("") && !to_date.equals("")) {
+                if (!status.equals("")) {
+                    sql = "SELECT user.*,user_book.* "
+                            + "FROM user_book "
+                            + "join user on user.id = user_book.us_id "
+                            + "WHERE user_book.status = ? "
+                            + "AND user_book.date_borrow >= ? "
+                            + "AND user_book.date_borrow <= ? "
+                            + " AND user.deleted_at is null "
+                            + " AND user_book.delete_at is null "
+                            + "  group by user.id ";
+                    flag = 1;
+                } else {
+                    sql = "SELECT user.*,user_book.* "
+                            + "FROM user_book join user on user.id = user_book.us_id "
+                            + "WHERE date_borrow >= ? "
+                            + "AND date_borrow <= ? "
+                            + "AND user.deleted_at is null "
+                            + "AND user_book.delete_at is null "
+                            + "group by user.id";
+                    flag = 2;
+                }
+            } else if (!status.equals("")) {
+                sql = "SELECT user.*,user_book.* "
                         + "FROM user_book "
                         + "join user on user.id = user_book.us_id "
-                        + "WHERE status = ? "
-                        + "AND date_borrow >= ? "
-                        + "AND date_borrow <= ?"
-                        + "AND deleted_at is null";
-                flag = 1;
+                        + "WHERE user_book.status = ? "
+                        + "AND user.deleted_at is null "
+                        + "AND user_book.delete_at is null "
+                        + "group by user.id";
+                flag = 3;
             } else {
-                sql = "SELECT user.* "
-                        + "FROM user_book join user on user.id = user_book.us_id "
-                        + "WHERE date_borrow >= ? "
-                        + "AND date_borrow <= ?"
-                        + "AND deleted_at is null";
-                flag = 2;
-            }
-            if (flag == 0) {
                 return baseListUser;
             }
             java.sql.PreparedStatement stmt = con.prepareStatement(sql);
@@ -143,11 +171,14 @@ public class SearchOrFilter {
                     stmt.setString(1, from_date);
                     stmt.setString(2, to_date);
                     break;
+                case 3:
+                    stmt.setInt(1, Integer.valueOf(status));
+                    break;
                 default:
             }
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                User user = new User();
+                UserExtension user = new UserExtension();
                 user.setEmail(rs.getString(6));
                 user.setId_faculty(rs.getInt(11));
                 user.setId_major(rs.getInt(14));
@@ -156,38 +187,46 @@ public class SearchOrFilter {
                 user.setName(rs.getString(2));
                 user.setDeletedAt(rs.getString(16));
                 user.setRole(rs.getInt(8));
+                user.setDateBorrow(rs.getString(20));
+                user.setUserBookStatus(rs.getString(22));
                 result.add(user);
             }
         }
-        return result.size() > 0 ? result : baseListUser;
+        return result;
     }
+
     /**
-     * 
+     *
      * @param id
      * @return User deleted
      */
     public User deleteUser(int id) {
         return userDA.delete(id);
     }
+
     /**
-     * 
+     *
      * @param id
      * @return User updated
      */
-    public User updateUser(int id){
+    public User updateUser(int id) {
         return userDA.update(id);
     }
-    
-    public void print(ArrayList<User> list) {
-        for (User u : list) {
+
+    public void print(ArrayList<UserExtension> list) {
+        for (UserExtension u : list) {
             System.out.println(u.toString());
         }
     }
 
     public static void main(String[] args) throws SQLException {
         SearchOrFilter sf = new SearchOrFilter();
-       // sf.print(sf.filterUser("", "2020-12-30 18:15:35", ""));
-        //sf.print(sf.serchUser("17000746", ""));
-        System.out.println(sf.deleteUser(21));
+       // sf.print(sf.filterUser("2020-01-01 18:15:35", "2021-12-30 18:15:35", "1"));
+        //ArrayList<UserExtension> listUser = sf.result;
+        // for (UserExtension u : listUser) {
+        //     System.out.println(u.toStirng());
+        // }
+        // sf.print(sf.searchUser("17000746", "tudv"));
+        System.out.println(sf.deleteUser(27));
     }
 }

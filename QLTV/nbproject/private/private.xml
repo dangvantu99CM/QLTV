@@ -4,14 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/DSS_WP/QLTV/QLTV/src/Model/Da/UserBook.java</file>
-            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Model/Da/School.java</file>
-            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Interface/UserInterface/MyInterface.java</file>
-            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Core/UserCore/SearchOrFilter.java</file>
-            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Model/Da/Da/UserDA.java</file>
-            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Model/Da/Da/UserBook.java</file>
-            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Model/Da/User.java</file>
-            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Model/Da/Major.java</file>
-            <file>file:/D:/DSS_WP/QLTV/QLTV/src/Controller/Quan_ly_tai_khoan/UserController.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/View/Quan_ly_tai_khoan/FormRegister.java</file>
+            <file>file:/D:/DSS_WP/QLTV/QLTV/src/View/Quan_ly_nguoi_dung/ListUser.java</file>
         </group>
     </open-files>
 </project-private>

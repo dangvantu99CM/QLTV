@@ -179,6 +179,7 @@ public class User {
                 + " ,msv " + "=> " + this.getMasv()
                 + " ,email " + "=> " + this.getEmail()
                 + " ,name " + "=> " + this.getName() 
+                + " ,deleted " + "=> " + this.getDeletedAt()
                 + " ]";
         return user;
     }

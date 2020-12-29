@@ -8,6 +8,7 @@ package Model.Da.Da;
 import Model.Da.User;
 import Database.ConnectDb;
 import Interface.UserInterface.MyInterface;
+import Model.Da.UserExtension;
 import View.Thong_bao.Message;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
@@ -32,20 +33,24 @@ public class UserDA implements MyInterface {
     private Connection con = ConnectDb.connectDB();
     public static ArrayList<User> listUser = null;
     private Message mess = new Message();
-    
+
     @Override
     public ArrayList getAll() {
-        listUser = new ArrayList<User>();
+        ArrayList<UserExtension> listUser = new ArrayList<UserExtension>();
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
         } else {
             try {
-                String sql = "SELECT * FROM user where deleted_at is null";
+                String sql = "SELECT * FROM user "
+                        + "left join user_book "
+                        + "on user.id = user_book.us_id "
+                        + "where user.deleted_at is null "
+                        + "group by user.id";
                 Statement stmt;
                 stmt = (Statement) con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
-                    User user = new User();
+                    UserExtension user = new UserExtension();
                     user.setEmail(rs.getString(6));
                     user.setId_faculty(rs.getInt(11));
                     user.setId_major(rs.getInt(14));
@@ -54,6 +59,8 @@ public class UserDA implements MyInterface {
                     user.setName(rs.getString(2));
                     user.setDeletedAt(rs.getString(16));
                     user.setRole(rs.getInt(8));
+                    user.setDateBorrow(rs.getString(20));
+                    user.setUserBookStatus(rs.getString(22));
                     listUser.add(user);
                 }
             } catch (SQLException ex) {
@@ -70,18 +77,17 @@ public class UserDA implements MyInterface {
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
         } else {
-            String sql = "INSERT INTO "
-                            + "user ("
-                                    + "us_name, "
-                                    + "us_code_student,"
-                                    + "us_mail ,"
-                                    + "us_role,"
-                                    + "fac_id,"
-                                    + "us_pass_word,"
-                                    + "maj_id,"
-                                    + "sch_id "
-                                + ") "
-                            + "VALUES (?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO user ("
+                    + "us_name, "
+                    + "us_code_student,"
+                    + "us_mail ,"
+                    + "us_role,"
+                    + "fac_id,"
+                    + "us_pass_word,"
+                    + "maj_id,"
+                    + "sch_id "
+                    + ") "
+                    + "VALUES (?, ?, ?, ?, ?,?, ?, ?)";
             PreparedStatement stmt;
             try {
                 stmt = (PreparedStatement) con.prepareStatement(sql);
@@ -109,16 +115,19 @@ public class UserDA implements MyInterface {
         } else {
             try {
                 User user = getUserByID(id);
-                if(user.getDeletedAt() != null){
+                //System.out.println(user.toString());
+                if (user.getDeletedAt() != null) {
                     return null;
                 }
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-                LocalDateTime now = LocalDateTime.now();  
-                String sql = "update user set deleted_at = ? where id = ?";
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                LocalDateTime now = LocalDateTime.now();
+               // System.out.println(dtf.format(now));
+                String sql = "update user set user.deleted_at = ? where user.id = ?";
                 PreparedStatement stmt;
                 stmt = (PreparedStatement) con.prepareStatement(sql);
-                stmt.setString(1,dtf.format(now));
+                stmt.setString(1, dtf.format(now));
                 stmt.setInt(2, id);
+                stmt.executeUpdate();
                 return user;
             } catch (SQLException ex) {
                 Logger.getLogger(UserDA.class.getName()).log(Level.SEVERE, null, ex);
@@ -139,7 +148,7 @@ public class UserDA implements MyInterface {
             PreparedStatement stmt;
             try {
                 User user = getUserByID(id);
-                if(user.getDeletedAt() != null){
+                if (user.getDeletedAt() != null) {
                     return null;
                 }
                 stmt = (PreparedStatement) con.prepareStatement(sql);
@@ -152,6 +161,7 @@ public class UserDA implements MyInterface {
                 stmt.setInt(11, user.getId_major());
                 stmt.setInt(12, user.getId_school());
                 stmt.setInt(13, user.getID());
+                stmt.executeUpdate();
                 return user;
             } catch (SQLException ex) {
                 Logger.getLogger(UserDA.class.getName()).log(Level.SEVERE, null, ex);
@@ -159,8 +169,7 @@ public class UserDA implements MyInterface {
         }
         return null;
     }
-    
-    
+
     public boolean checkLogin(String email, String password) throws SQLException {
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
@@ -176,8 +185,8 @@ public class UserDA implements MyInterface {
         }
         return false;
     }
-    
-    public User getUserByID(int id) throws SQLException{
+
+    public User getUserByID(int id) throws SQLException {
         User user = new User();
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
@@ -203,11 +212,11 @@ public class UserDA implements MyInterface {
 
     public static void main(String[] args) throws SQLException {
         UserDA qe = new UserDA();
-        ArrayList<User> listUser = qe.getAll();
-        for (User u : listUser) {
-            System.out.println("user==============" + u.getName());
-        }
+//        ArrayList<UserExtension> listUser = qe.getAll();
+//        for (UserExtension u : listUser) {
+//            System.out.println(u.toString());
+//        }
+        qe.delete(23);
     }
-
 
 }
