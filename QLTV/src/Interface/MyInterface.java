@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Interface.UserInterface;
+package Interface;
 
 import java.util.ArrayList;
 
@@ -19,5 +19,5 @@ public interface MyInterface<T> {
 
     public T delete(int id);
 
-    public T update(int id);
+    public T update(T item);
 }

@@ -91,6 +91,7 @@ public class SearchOrFilter {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 UserExtension user = new UserExtension();
+                user.setID(rs.getInt(1));
                 user.setEmail(rs.getString(6));
                 user.setId_faculty(rs.getInt(11));
                 user.setId_major(rs.getInt(14));
@@ -179,6 +180,7 @@ public class SearchOrFilter {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 UserExtension user = new UserExtension();
+                user.setID(rs.getInt(1));
                 user.setEmail(rs.getString(6));
                 user.setId_faculty(rs.getInt(11));
                 user.setId_major(rs.getInt(14));
@@ -206,11 +208,11 @@ public class SearchOrFilter {
 
     /**
      *
-     * @param id
+     * @param User user
      * @return User updated
      */
-    public User updateUser(int id) {
-        return userDA.update(id);
+    public User updateUser(User user) {
+        return userDA.update(user);
     }
 
     public void print(ArrayList<UserExtension> list) {
@@ -222,11 +224,25 @@ public class SearchOrFilter {
     public static void main(String[] args) throws SQLException {
         SearchOrFilter sf = new SearchOrFilter();
        // sf.print(sf.filterUser("2020-01-01 18:15:35", "2021-12-30 18:15:35", "1"));
-        //ArrayList<UserExtension> listUser = sf.result;
+        ArrayList<UserExtension> listUser = sf.filterUser("2020-01-01 18:15:35", "2021-12-30 18:15:35", "1");
         // for (UserExtension u : listUser) {
         //     System.out.println(u.toStirng());
         // }
-        // sf.print(sf.searchUser("17000746", "tudv"));
-        System.out.println(sf.deleteUser(27));
+        // sf.print(sf.searchUser("17000 746", "tudv"));
+        // System.out.println(sf.deleteUser(27));
+        
+        //user.set
+        UserExtension user = listUser.get(0);
+      //  System.out.println("user === " + user.toString());
+        user.setName("test");
+        user.setEmail("test@gmail.com");
+        user.setMasv(7777);
+        user.setPassword("7777");
+        user.setRole(2);
+        user.setId_major(2);
+        user.setId_school(1);
+        
+      //  System.out.println("user after = "  + user.toString());
+        sf.updateUser(user);
     }
 }

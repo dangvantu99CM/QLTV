@@ -7,7 +7,7 @@ package Model.Da.Da;
 
 import Model.Da.User;
 import Database.ConnectDb;
-import Interface.UserInterface.MyInterface;
+import Interface.MyInterface;
 import Model.Da.UserExtension;
 import View.Thong_bao.Message;
 import com.mysql.jdbc.PreparedStatement;
@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  *
  * @author tudv
  */
-public class UserDA implements MyInterface {
+public class UserDA implements MyInterface{
 
     public UserDA() {
     }
@@ -51,6 +51,7 @@ public class UserDA implements MyInterface {
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
                     UserExtension user = new UserExtension();
+                    user.setID(rs.getInt(1));
                     user.setEmail(rs.getString(6));
                     user.setId_faculty(rs.getInt(11));
                     user.setId_major(rs.getInt(14));
@@ -115,13 +116,11 @@ public class UserDA implements MyInterface {
         } else {
             try {
                 User user = getUserByID(id);
-                //System.out.println(user.toString());
                 if (user.getDeletedAt() != null) {
                     return null;
                 }
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
                 LocalDateTime now = LocalDateTime.now();
-               // System.out.println(dtf.format(now));
                 String sql = "update user set user.deleted_at = ? where user.id = ?";
                 PreparedStatement stmt;
                 stmt = (PreparedStatement) con.prepareStatement(sql);
@@ -137,30 +136,37 @@ public class UserDA implements MyInterface {
     }
 
     @Override
-    public User update(int id) {
+    public User update(Object item) {
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
         } else {
-            String sql = "update user set us_name = ?,us_address=?"
-                    + ",us_code_student=?,us_mail=?,us_phone_number=?,us_role=?"
-                    + ",fac_id=?,us_pass_word=?,maj_id=?,sch_id=?"
+            String sql = "update user set "
+                    + "us_name = ? "
+                    + ",us_mail=?,"
+                    + "us_role=?"
+                    + ",fac_id=?,"
+                    + "us_code_student=?,"
+                    + "us_pass_word=?,"
+                    + "maj_id=?,"
+                    + "sch_id=? "
                     + "where id = ?";
             PreparedStatement stmt;
             try {
-                User user = getUserByID(id);
+                User user = (User)item;
+                System.out.println("user === " + user);
                 if (user.getDeletedAt() != null) {
                     return null;
                 }
                 stmt = (PreparedStatement) con.prepareStatement(sql);
                 stmt.setString(1, user.getName());
-                stmt.setInt(4, user.getMasv());
-                stmt.setString(5, user.getEmail());
-                stmt.setInt(7, user.getRole());
-                stmt.setInt(8, user.getId_faculty());
-                stmt.setString(10, user.getPassword());
-                stmt.setInt(11, user.getId_major());
-                stmt.setInt(12, user.getId_school());
-                stmt.setInt(13, user.getID());
+                stmt.setString(2, user.getEmail());
+                stmt.setInt(3, user.getRole());
+                stmt.setInt(4, user.getId_faculty());
+                stmt.setInt(5, user.getMasv());
+                stmt.setString(6, user.getPassword());
+                stmt.setInt(7, user.getId_major());
+                stmt.setInt(8, user.getId_school());
+                stmt.setInt(9, user.getID());
                 stmt.executeUpdate();
                 return user;
             } catch (SQLException ex) {
@@ -212,11 +218,11 @@ public class UserDA implements MyInterface {
 
     public static void main(String[] args) throws SQLException {
         UserDA qe = new UserDA();
-//        ArrayList<UserExtension> listUser = qe.getAll();
-//        for (UserExtension u : listUser) {
-//            System.out.println(u.toString());
-//        }
-        qe.delete(23);
+        ArrayList<UserExtension> listUser = qe.getAll();
+        for (UserExtension u : listUser) {
+            System.out.println(u.toString());
+        }
+        //qe.delete(23);
     }
 
 }

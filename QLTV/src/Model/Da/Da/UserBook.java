@@ -7,7 +7,7 @@ package Model.Da.Da;
 
 import Model.Da.User;
 import Database.ConnectDb;
-import Interface.UserInterface.MyInterface;
+import Interface.MyInterface;
 import View.Thong_bao.Message;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
@@ -32,11 +32,7 @@ public class UserBook implements MyInterface {
 
     @Override
     public ArrayList getAll() {
-        return listUserBook;
-    }
-
-    public boolean create(int id) {
-        return false;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -50,7 +46,7 @@ public class UserBook implements MyInterface {
     }
 
     @Override
-    public Object update(int id) {
+    public Object update(Object item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
