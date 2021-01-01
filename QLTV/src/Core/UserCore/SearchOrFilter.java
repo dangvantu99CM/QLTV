@@ -5,6 +5,7 @@
  */
 package Core.UserCore;
 
+import BaseClass.BaseClass;
 import Database.ConnectDb;
 import Model.Da.Da.UserDA;
 import Model.Da.User;
@@ -24,8 +25,8 @@ import org.omg.CORBA.UserException;
  */
 public class SearchOrFilter {
 
-    private Connection con = ConnectDb.connectDB();
-    private Message mess = new Message();
+    private Connection con = BaseClass.getConnectDb();
+    private Message mess = BaseClass.getMessage();
 
     private UserDA userDA = new UserDA();
 
@@ -110,8 +111,8 @@ public class SearchOrFilter {
 
     /**
      *
-     * @param from_date
-     * @param to_date
+     * @param from_date: Lọc theo thời gian từ ngày bao nhiêu theo định dạng (YYYYMMDD HHMMSS)
+     * @param to_date: Lọc theo thời gian den ngày bao nhiêu theo định dạng (YYYYMMDD HHMMSS)
      * @param status : loc theo trang thai : dang muon , da tra, qua han
      * @return Danh sach User phu hop
      */
@@ -223,17 +224,17 @@ public class SearchOrFilter {
 
     public static void main(String[] args) throws SQLException {
         SearchOrFilter sf = new SearchOrFilter();
-       // sf.print(sf.filterUser("2020-01-01 18:15:35", "2021-12-30 18:15:35", "1"));
+        // sf.print(sf.filterUser("2020-01-01 18:15:35", "2021-12-30 18:15:35", "1"));
         ArrayList<UserExtension> listUser = sf.filterUser("2020-01-01 18:15:35", "2021-12-30 18:15:35", "1");
         // for (UserExtension u : listUser) {
         //     System.out.println(u.toStirng());
         // }
         // sf.print(sf.searchUser("17000 746", "tudv"));
         // System.out.println(sf.deleteUser(27));
-        
+
         //user.set
         UserExtension user = listUser.get(0);
-      //  System.out.println("user === " + user.toString());
+        //  System.out.println("user === " + user.toString());
         user.setName("test");
         user.setEmail("test@gmail.com");
         user.setMasv(7777);
@@ -241,8 +242,8 @@ public class SearchOrFilter {
         user.setRole(2);
         user.setId_major(2);
         user.setId_school(1);
-        
-      //  System.out.println("user after = "  + user.toString());
+
+        //  System.out.println("user after = "  + user.toString());
         sf.updateUser(user);
     }
 }

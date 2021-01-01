@@ -5,6 +5,8 @@
  */
 package Database;
 
+import BaseClass.BaseClass;
+import View.Thong_bao.Message;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -13,21 +15,26 @@ import java.sql.DriverManager;
  * @author tudv
  */
 public class ConnectDb {
+
+    private Connection con = BaseClass.getConnectDb();
+    private Message mess = BaseClass.getMessage();
+
     public static Connection connectDB() {
-        Connection conn1 = null;
+        Connection conn = null;
         try {
             String url1 = "jdbc:mysql://localhost/quan_ly_thu_vien";
             String user = "root";
-            String password = "";	
-            conn1 = DriverManager.getConnection(url1, user, password);
-        }catch(Exception ex) {
+            String password = "";
+            conn = DriverManager.getConnection(url1, user, password);
+        } catch (Exception ex) {
             System.out.println("An error occurred. Maybe user/password is invalid");
             ex.printStackTrace();
         }
-        return conn1;
+        return conn;
     }
-    public static void main(String []args) {
-        if(ConnectDb.connectDB() != null){
+
+    public static void main(String[] args) {
+        if (ConnectDb.connectDB() != null) {
             System.out.println("aaaaaaaaaaaaaa");
         };
     }

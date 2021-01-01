@@ -10,5 +10,155 @@ package Model.Da;
  * @author tudv
  */
 public class Book {
-    
+
+    private int id;
+    private String name;
+    private int storeID;
+    private String author;
+    private int status;
+    private int type;
+    private int number;
+    private String bookDateLimit;
+    private double bookPrice;
+    private String deletedAt;
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the storeID
+     */
+    public int getStoreID() {
+        return storeID;
+    }
+
+    /**
+     * @param storeID the storeID to set
+     */
+    public void setStoreID(int storeID) {
+        this.storeID = storeID;
+    }
+
+    /**
+     * @return the author
+     */
+    public String getAuthor() {
+        return author;
+    }
+
+    /**
+     * @param author the author to set
+     */
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    /**
+     * @return the status
+     */
+    public int getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    /**
+     * @return the type
+     */
+    public int getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    /**
+     * @return the number
+     */
+    public int getNumber() {
+        return number;
+    }
+
+    /**
+     * @param number the number to set
+     */
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    /**
+     * @return the bookDateLimit
+     */
+    public String getBookDateLimit() {
+        return bookDateLimit;
+    }
+
+    /**
+     * @param bookDateLimit the bookDateLimit to set
+     */
+    public void setBookDateLimit(String bookDateLimit) {
+        this.bookDateLimit = bookDateLimit;
+    }
+
+    /**
+     * @return the bookPrice
+     */
+    public double getBookPrice() {
+        return bookPrice;
+    }
+
+    /**
+     * @param bookPrice the bookPrice to set
+     */
+    public void setBookPrice(double bookPrice) {
+        this.bookPrice = bookPrice;
+    }
+
+    /**
+     * @return the deletedAt
+     */
+    public String getDeletedAt() {
+        return deletedAt;
+    }
+
+    /**
+     * @param deletedAt the deletedAt to set
+     */
+    public void setDeletedAt(String deletedAt) {
+        this.deletedAt = deletedAt;
+    }
 }

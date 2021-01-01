@@ -5,6 +5,7 @@
  */
 package Model.Da.Da;
 
+import BaseClass.BaseClass;
 import Model.Da.User;
 import Database.ConnectDb;
 import Interface.MyInterface;
@@ -25,14 +26,15 @@ import java.util.logging.Logger;
  *
  * @author tudv
  */
-public class UserDA implements MyInterface{
+public class UserDA implements MyInterface {
 
     public UserDA() {
     }
 
-    private Connection con = ConnectDb.connectDB();
+    private Connection con = BaseClass.getConnectDb();
+    private Message mess = BaseClass.getMessage();
+
     public static ArrayList<User> listUser = null;
-    private Message mess = new Message();
 
     @Override
     public ArrayList getAll() {
@@ -74,7 +76,6 @@ public class UserDA implements MyInterface{
     @Override
     public User create(Object item) {
         User user = (User) item;
-        boolean result = false;
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
         } else {
@@ -100,7 +101,7 @@ public class UserDA implements MyInterface{
                 stmt.setString(6, user.getPassword());
                 stmt.setInt(7, user.getId_major());
                 stmt.setInt(8, user.getId_school());
-                result = (stmt.executeUpdate() > 0);
+                stmt.executeUpdate();
             } catch (SQLException ex) {
                 Logger.getLogger(UserDA.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -152,7 +153,7 @@ public class UserDA implements MyInterface{
                     + "where id = ?";
             PreparedStatement stmt;
             try {
-                User user = (User)item;
+                User user = (User) item;
                 System.out.println("user === " + user);
                 if (user.getDeletedAt() != null) {
                     return null;
@@ -220,7 +221,7 @@ public class UserDA implements MyInterface{
         UserDA qe = new UserDA();
         ArrayList<UserExtension> listUser = qe.getAll();
         for (UserExtension u : listUser) {
-            System.out.println(u.toString());
+            System.out.println(u.getMasv());
         }
         //qe.delete(23);
     }

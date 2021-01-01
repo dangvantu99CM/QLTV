@@ -1,5 +1,7 @@
 package View.Quan_ly_tai_khoan;
 
+import BaseClass.BaseClass;
+import BaseClass.Validate;
 import Controller.Quan_ly_tai_khoan.UserController;
 import Model.Da.Da.UserDA;
 import View.Thong_bao.Message;
@@ -35,21 +37,25 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import net.miginfocom.swing.MigLayout;
 
-public class FormLogin extends JFrame{
+public class FormLogin extends JFrame {
 
     public FormLogin() {
         initFormLogin();
     }
 
-    private JTextField txtUsername;
+    private Connection con = BaseClass.getConnectDb();
+    private Message mes = BaseClass.getMessage();
+    private Validate validator = new Validate();
+
+    private JTextField txtEmail;
     private JPasswordField txtPassword;
     private JCheckBox checkBoxMemoryAccount;
     private JButton btnLogin;
     private boolean isLoading = false;
-    public static JLabel lblForgetPassword, lblUsername, lblCreateAccount, lblPassword, lblMemory;
-    
+    public static JLabel lblForgetPassword, lblEmail, lblCreateAccount, lblPassword, lblMemory;
+
     public UserController userController;
-    
+
     public void initFormLogin() {
         userController = new UserController(this);
         this.setTitle("Đăng nhập");
@@ -58,18 +64,16 @@ public class FormLogin extends JFrame{
         background.setAlignmentX(Component.CENTER_ALIGNMENT);
         this.setContentPane(background);
         this.setLayout(new BorderLayout());
-        
+
         JPanel contend = new JPanel();
         contend.setLayout(new MigLayout("", "[][grow]", "[][]"));
 
-        lblUsername = new JLabel("Email");
+        lblEmail = new JLabel("Email");
         lblPassword = new JLabel("Mật khẩu");
         btnLogin = new JButton("Đăng nhập");
-        //lblMemory = new JLabel("Ghi nhớ mật khẩu");
-        //checkBoxMemoryAccount = new JCheckBox();
 
-        contend.add(lblUsername, "cell 0 0,alignx trailing");
-        txtUsername = new JTextField();
+        contend.add(lblEmail, "cell 0 0,alignx trailing");
+        txtEmail = new JTextField();
         contend.add(getTxtUsername(), "cell 1 0,growx");
 
         contend.add(lblPassword, "cell 0 1,alignx trailing");
@@ -77,12 +81,6 @@ public class FormLogin extends JFrame{
         contend.add(getTxtPassword(), "cell 1 1,growx");
 
         JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-       // p.add(checkBoxMemoryAccount);
-        //p.add(lblMemory);
-
-        //checkBoxMemoryAccount.setPreferredSize(new Dimension(50, 50));
-      //  checkBoxMemoryAccount.setBackground(new Color(25, 26, 28, 0));
 
         p.setBackground(new Color(0f, 0f, 0f, 0f));
         contend.add(p, "cell 1 2,growx");
@@ -95,7 +93,7 @@ public class FormLogin extends JFrame{
         contend.add(lblForgetPassword, "cell 1 2,growx");
         contend.add(lblCreateAccount, "cell 1 2,growx");
         contend.add(btnLogin, "cell 1 3,growx");
-        
+
         contend.setBackground(new Color(0f, 0f, 0f, 0f));
         contend.setBorder(BorderFactory.createEmptyBorder(70, 400, 0, 0));
         this.add(contend, BorderLayout.WEST);
@@ -111,16 +109,30 @@ public class FormLogin extends JFrame{
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Message mes = new Message();
                 try {
-                    if (userController.login(getTxtUsername().getText(), getTxtPassword().getText())) {
-                        System.out.println("Login correct !");
-                        self.dispose();
+                    String message = "";
+                    message += !(validator.validateFieldRequired(txtEmail.getText(), lblEmail.getText()).equals("")) ? 
+                                    validator.validateFieldRequired(txtEmail.getText(), lblEmail.getText())
+                                    + "\n" : "";
+                    message += !(validator.validateFieldRequired(txtPassword.getText(), lblPassword.getText()).equals("")) ? 
+                                    validator.validateFieldRequired(txtPassword.getText(), lblPassword.getText())
+                                    + "\n" : "";
+                    
+                    message += !(validator.validateEmail(txtEmail.getText()).equals("")) ?
+                                    validator.validateEmail(txtEmail.getText())
+                                    + "\n" : "";
+                    
+                    if (!message.equals("")) {
+                        mes.showMessage("error", message);
                     } else {
-                        mes.showMessage("success","Đăng nhập không thành công");
+                        if (userController.login(txtEmail.getText(), txtPassword.getText())) {
+                            self.dispose();
+                        } else {
+                            mes.showMessage("error", "Mật khẩu hoặc Email không đúng");
+                        }
                     }
                 } catch (SQLException ex) {
-                    mes.showMessage("error","Đăng nhập không thành công");
+                    mes.showMessage("error", "Mật khẩu hoặc Email không đúng");
                 }
             }
         });
@@ -133,7 +145,7 @@ public class FormLogin extends JFrame{
         lblCreateAccount.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 try {
-                    FormRegister formRegister = new FormRegister();
+                    FormRegister formRegister = new FormRegister(self);
                 } catch (SQLException ex) {
                     Logger.getLogger(FormLogin.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -141,11 +153,12 @@ public class FormLogin extends JFrame{
             }
         });
     }
+
     /**
-     * @return the txtUsername
+     * @return the txtEmail
      */
     public JTextField getTxtUsername() {
-        return txtUsername;
+        return txtEmail;
     }
 
     /**
@@ -154,12 +167,12 @@ public class FormLogin extends JFrame{
     public JPasswordField getTxtPassword() {
         return txtPassword;
     }
-    
-    public void setTxtUsername(String name){
+
+    public void setTxtUsername(String name) {
         this.getTxtUsername().setText(name);
     }
-    
-    public static void main(String[]args){
+
+    public static void main(String[] args) {
         FormLogin fl = new FormLogin();
     }
 }
