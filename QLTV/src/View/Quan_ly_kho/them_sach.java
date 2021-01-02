@@ -66,7 +66,7 @@ public class them_sach extends JFrame {
         ArrayList<String> tenkho = new ArrayList();
 
         if (con != null) {
-            String sql = "SELECT * FROM store where deleted_at is null";
+            String sql = "SELECT * FROM store where deleted_at is null AND st_slot_empty != 0";
             try {
                 java.sql.PreparedStatement stmt = con.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery();

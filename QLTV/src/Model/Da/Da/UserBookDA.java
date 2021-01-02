@@ -34,6 +34,8 @@ public class UserBookDA implements MyInterface {
 
     public static ArrayList<UserBook> listUserBook = null;
 
+    private StoreDA storeDa = new StoreDA();
+
     @Override
     public ArrayList getAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -60,7 +62,10 @@ public class UserBookDA implements MyInterface {
                 stmt.setString(3, userBook.getDate_borrow());
                 stmt.setInt(4, userBook.getStatus());
                 int count = stmt.executeUpdate();
-                if(count > 0) return true;
+                if (count > 0) {
+                    updateStoreIfBrrow(userBook.getBo_id());
+                    return true;
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(UserDA.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -74,8 +79,29 @@ public class UserBookDA implements MyInterface {
     }
 
     @Override
-    public boolean update(int id,Object item) {
+    public boolean update(int id, Object item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public boolean updateStoreIfBrrow(int bo_id) throws SQLException {
+        String sql = "SELECT store.* FROM book join store on book.bo_id_store = store.id where book.id = ? AND store.deleted_at is null AND book.deleted_at is null";
+        java.sql.PreparedStatement stmt = con.prepareStatement(sql);
+        stmt.setInt(1, bo_id);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            int st_slot_current = rs.getInt(8) + 1;
+            int st_slot_empty = rs.getInt(7) - st_slot_current;
+            String sql1 = "update store set st_slot_current =?,st_slot_empty =? where id = ? AND store.deleted_at is null";
+            java.sql.PreparedStatement stmt1 = con.prepareStatement(sql1);
+            stmt1 = (PreparedStatement) con.prepareStatement(sql1);
+            stmt1.setInt(1, st_slot_current);
+            stmt1.setInt(2, st_slot_empty);
+            stmt1.setInt(3, rs.getInt(1));
+            int count = stmt1.executeUpdate();
+            if (count > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
