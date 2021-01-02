@@ -68,11 +68,15 @@ public class FormRegister<T> extends JFrame {
     public ArrayList<Major> listMajor;
 
     private JFrame frameAfter = null;
+    private int userID = -1;
 
     private Validate validator = new Validate();
 
-    public FormRegister(JFrame frameAfter) throws SQLException {
+    private UserDA userDa = new UserDA();
+
+    public FormRegister(JFrame frameAfter, int userID) throws SQLException {
         this.frameAfter = frameAfter;
+        this.userID = userID;
         userController = new UserController(this);
         this.setTitle("Đăng ký");
         this.setSize(780, 442);
@@ -131,6 +135,14 @@ public class FormRegister<T> extends JFrame {
 
         btnResgister = new JButton("Đăng Ký");
         btnCancel = new JButton("Thoát");
+
+        if (this.userID != -1) {
+            loadCombobox((ArrayList<T>) listFaculty, cbxListFaculty, 2);
+            loadCombobox((ArrayList<T>) listMajor, cbxListMajor, 3);
+            btnResgister.setText("Cập nhật");
+            setTextIfEdit();
+        }
+
         contend.add(btnResgister, "cell 1 8,growx");
         contend.add(btnCancel, "cell 1 8,growx");
         contend.setBackground(new Color(0f, 0f, 0f, 0f));
@@ -158,17 +170,17 @@ public class FormRegister<T> extends JFrame {
             if (type == 1) {
                 School school = new School();
                 school = (School) x;
-                cbx.addItem(school.getId() + " - " + school.getName());
+                cbx.addItem(school.getId() + "-" + school.getName());
             }
             if (type == 2) {
                 Faculty fac = new Faculty();
                 fac = (Faculty) x;
-                cbx.addItem(fac.getId() + " - " + fac.getName());
+                cbx.addItem(fac.getId() + "-" + fac.getName());
             }
             if (type == 3) {
                 Major major = new Major();
                 major = (Major) x;
-                cbx.addItem(major.getId() + " - " + major.getName());
+                cbx.addItem(major.getId() + "-" + major.getName());
             }
         }
         cbx.setSelectedItem(null);
@@ -179,7 +191,9 @@ public class FormRegister<T> extends JFrame {
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frameAfter.setVisible(true);
+                if (frameAfter != null) {
+                    frameAfter.setVisible(true);
+                }
                 self.dispose();
             }
         });
@@ -212,7 +226,6 @@ public class FormRegister<T> extends JFrame {
                 message += !(validator.validateSelected(cbxListMajor, lblMarjor.getText())).equals("")
                         ? validator.validateSelected(cbxListMajor, lblMarjor.getText())
                         + "\n" : "";
-
                 message += !(validator.validateEmail(txtEmail.getText()).equals(""))
                         ? validator.validateEmail(txtEmail.getText())
                         + "\n" : "";
@@ -222,7 +235,6 @@ public class FormRegister<T> extends JFrame {
                 if (!message.equals("")) {
                     mes.showMessage("error", message);
                 } else {
-                    UserDA userDa = new UserDA();
                     User us = new User();
                     us.setEmail(txtEmail.getText());
                     us.setName(txtUsername.getText());
@@ -232,28 +244,44 @@ public class FormRegister<T> extends JFrame {
                     us.setPassword(txtPassword.getText());
                     us.setRole(2);
                     us.setMasv(Integer.valueOf(txtMsv.getText()));
-                    User addUser = userDa.create(us);
-                    if (addUser == null) {
-                        mes.showMessage("error", "Đăng ký không thành công");
+                    if (userID != -1) {
+                        if (!userDa.update(userID, us)) {
+                            mes.showMessage("error", "Cập nhật không thành công");
+                        } else {
+                            mes.showMessage("success", "Cập nhật thành công");
+                            self.dispose();
+                        }
                     } else {
-                        if (frameAfter != null) {
-                            if (frameAfter instanceof muon_sach) {
-                                muon_sach bookBorrow = (muon_sach) frameAfter;
-                                bookBorrow.textField.setText(txtUsername.getText());
-                                bookBorrow.textField_1.setText(txtMsv.getText());
-                                bookBorrow.loadCombobox();
-                                ArrayList<User> listUser = bookBorrow.listUser;
-                                for (int i = 0; i < listUser.size(); i++) {
-                                    if (listUser.get(i).getMasv() == Integer.valueOf(txtMsv.getText())) {
-                                        bookBorrow.comboBox_2.setSelectedIndex(i);
-                                        break;
-                                    }
+                        if (!userDa.create(us)) {
+                            mes.showMessage("error", "Tạo mới không thành công");
+                        } else {
+                            mes.showMessage("success", "Tạo mới thành công");
+                            self.dispose();
+                        }
+                    }
+                    if (frameAfter != null) {
+                        if (frameAfter instanceof muon_sach) {
+                            muon_sach bookBorrow = (muon_sach) frameAfter;
+                            bookBorrow.textField.setText(txtUsername.getText());
+                            bookBorrow.textField_1.setText(txtMsv.getText());
+                            bookBorrow.loadCombobox();
+                            ArrayList<User> listUser = bookBorrow.listUser;
+                            for (int i = 0; i < listUser.size(); i++) {
+                                if (listUser.get(i).getMasv() == Integer.valueOf(txtMsv.getText())) {
+                                    bookBorrow.comboBox_2.setSelectedIndex(i);
+                                    break;
                                 }
                             }
-                            frameAfter.setVisible(true);
                         }
+                        if (frameAfter instanceof FormLogin) {
+                            FormLogin formLogin = (FormLogin) frameAfter;
+                            formLogin.setTxtMail(txtEmail.getText());
+                            formLogin.setTxtPass(txtPassword.getText());
+                        }
+                        frameAfter.setVisible(true);
                         self.dispose();
                     }
+
                 }
             }
         });
@@ -301,8 +329,62 @@ public class FormRegister<T> extends JFrame {
         });
     }
 
+    public void setTextIfEdit() throws SQLException {
+        if (userID != -1) {
+            User user = userDa.getUserByID(userID);
+            txtUsername.setText(user.getName());
+            txtEmail.setText(user.getEmail());
+            txtMsv.setText(String.valueOf(user.getMasv()));
+            txtPassword.setText(user.getPassword());
+            txtPasswordAgain.setText(user.getPassword());
+            if (user.getId_school() != -1) {
+                setSelectedCombobox(cbxListSchool, user.getId_school(), 1, (ArrayList<T>) listSchool);
+            }
+            if (user.getId_faculty()!= -1) {
+                setSelectedCombobox(cbxListFaculty, user.getId_faculty(), 2, (ArrayList<T>) listFaculty);
+            }
+            if (user.getId_major()!= -1) {
+                setSelectedCombobox(cbxListMajor, user.getId_major(), 3, (ArrayList<T>) listMajor);
+            }
+        }
+    }
+
+    public void setSelectedCombobox(JComboBox cbx, int value, int type, ArrayList<T> list) {
+        int size = list.size();
+        if(size <= 0) return;
+        for (int i = 0; i < size; i++) {
+            if (type == 1) {
+                School school = new School();
+                school = (School) list.get(i);
+                if (value == school.getId()) {
+                    cbx.setSelectedIndex(i);
+                    sch_id = value;
+                    break;
+                }
+            }
+            if (type == 2) {
+                Faculty fac = new Faculty();
+                fac = (Faculty) list.get(i);
+                if (value == fac.getId()) {
+                    cbx.setSelectedIndex(i);
+                    fac_id = value;
+                    break;
+                }
+            }
+            if (type == 3) {
+                Major major = new Major();
+                major = (Major) list.get(i);
+                if (value == major.getId()) {
+                    cbx.setSelectedIndex(i);
+                    maj_id = value;
+                    break;
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) throws SQLException {
-        FormRegister f = new FormRegister(null);
+        FormRegister f = new FormRegister(null, 38);
         f.actionListener();
     }
 }

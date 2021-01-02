@@ -25,7 +25,7 @@ public class SchoolDA {
 
     public ArrayList getAllListSchool() throws SQLException {
         listSchool = new ArrayList<School>();
-        String sql = "SELECT * FROM school";
+        String sql = "SELECT * FROM school where deleted_at is null";
         Statement stmt = (Statement) con.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
         while (rs.next()) {

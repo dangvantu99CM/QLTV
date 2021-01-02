@@ -29,7 +29,7 @@ public class MajorDA {
 
     public ArrayList getAllListMajor() throws SQLException {
         listMajor = new ArrayList<Major>();
-        String sql = "SELECT * FROM majors";
+        String sql = "SELECT * FROM majors where deleted_at is null";
         Statement stmt = (Statement) con.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
         while (rs.next()) {

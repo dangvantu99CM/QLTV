@@ -203,7 +203,7 @@ public class SearchOrFilter {
      * @param id
      * @return User deleted
      */
-    public User deleteUser(int id) {
+    public boolean deleteUser(int id) {
         return userDA.delete(id);
     }
 
@@ -212,8 +212,8 @@ public class SearchOrFilter {
      * @param User user
      * @return User updated
      */
-    public User updateUser(User user) {
-        return userDA.update(user);
+    public boolean updateUser(int us_id,User newUser) {
+        return userDA.update(us_id,newUser);
     }
 
     public void print(ArrayList<UserExtension> list) {
@@ -244,6 +244,6 @@ public class SearchOrFilter {
         user.setId_school(1);
 
         //  System.out.println("user after = "  + user.toString());
-        sf.updateUser(user);
+        //sf.updateUser(user);
     }
 }

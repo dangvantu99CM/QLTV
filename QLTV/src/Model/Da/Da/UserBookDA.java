@@ -40,7 +40,7 @@ public class UserBookDA implements MyInterface {
     }
 
     @Override
-    public Object create(Object item) {
+    public boolean create(Object item) {
         UserBook userBook = (UserBook) item;
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
@@ -59,22 +59,22 @@ public class UserBookDA implements MyInterface {
                 stmt.setInt(2, userBook.getBo_id());
                 stmt.setString(3, userBook.getDate_borrow());
                 stmt.setInt(4, userBook.getStatus());
-                stmt.executeUpdate();
+                int count = stmt.executeUpdate();
+                if(count > 0) return true;
             } catch (SQLException ex) {
                 Logger.getLogger(UserDA.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return userBook;
         }
-        return null;
+        return false;
     }
 
     @Override
-    public Object delete(int id) {
+    public boolean delete(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Object update(Object item) {
+    public boolean update(int id,Object item) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

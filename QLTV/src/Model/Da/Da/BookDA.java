@@ -91,21 +91,21 @@ public class BookDA implements MyInterface {
     }
 
     @Override
-    public Book create(Object item) {
+    public boolean create(Object item) {
 
-        return null;
+        return false;
     }
 
     @Override
-    public Book delete(int id) {
+    public boolean delete(int id) {
 
-        return null;
+        return false;
     }
 
     @Override
-    public Book update(Object item) {
+    public boolean update(int id,Object item) {
 
-        return null;
+        return false;
     }
 
     public static void main(String[] args) throws SQLException {

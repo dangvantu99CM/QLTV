@@ -56,6 +56,22 @@ public class FormLogin extends JFrame {
 
     public UserController userController;
 
+    public JTextField getTxtMail() {
+        return txtEmail;
+    }
+
+    public JPasswordField getTxtPassword() {
+        return txtPassword;
+    }
+
+    public void setTxtMail(String email) {
+        this.txtEmail.setText(email);
+    }
+
+    public void setTxtPass(String pass) {
+        this.txtPassword.setText(pass);
+    }
+
     public void initFormLogin() {
         userController = new UserController(this);
         this.setTitle("Đăng nhập");
@@ -74,11 +90,11 @@ public class FormLogin extends JFrame {
 
         contend.add(lblEmail, "cell 0 0,alignx trailing");
         txtEmail = new JTextField();
-        contend.add(getTxtUsername(), "cell 1 0,growx");
+        contend.add(txtEmail, "cell 1 0,growx");
 
         contend.add(lblPassword, "cell 0 1,alignx trailing");
         txtPassword = new JPasswordField();
-        contend.add(getTxtPassword(), "cell 1 1,growx");
+        contend.add(txtPassword, "cell 1 1,growx");
 
         JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -111,17 +127,17 @@ public class FormLogin extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     String message = "";
-                    message += !(validator.validateFieldRequired(txtEmail.getText(), lblEmail.getText()).equals("")) ? 
-                                    validator.validateFieldRequired(txtEmail.getText(), lblEmail.getText())
-                                    + "\n" : "";
-                    message += !(validator.validateFieldRequired(txtPassword.getText(), lblPassword.getText()).equals("")) ? 
-                                    validator.validateFieldRequired(txtPassword.getText(), lblPassword.getText())
-                                    + "\n" : "";
-                    
-                    message += !(validator.validateEmail(txtEmail.getText()).equals("")) ?
-                                    validator.validateEmail(txtEmail.getText())
-                                    + "\n" : "";
-                    
+                    message += !(validator.validateFieldRequired(txtEmail.getText(), lblEmail.getText()).equals(""))
+                            ? validator.validateFieldRequired(txtEmail.getText(), lblEmail.getText())
+                            + "\n" : "";
+                    message += !(validator.validateFieldRequired(txtPassword.getText(), lblPassword.getText()).equals(""))
+                            ? validator.validateFieldRequired(txtPassword.getText(), lblPassword.getText())
+                            + "\n" : "";
+
+                    message += !(validator.validateEmail(txtEmail.getText()).equals(""))
+                            ? validator.validateEmail(txtEmail.getText())
+                            + "\n" : "";
+
                     if (!message.equals("")) {
                         mes.showMessage("error", message);
                     } else {
@@ -145,31 +161,13 @@ public class FormLogin extends JFrame {
         lblCreateAccount.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 try {
-                    FormRegister formRegister = new FormRegister(self);
+                    FormRegister formRegister = new FormRegister(self, -1);
                 } catch (SQLException ex) {
                     Logger.getLogger(FormLogin.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 self.dispose();
             }
         });
-    }
-
-    /**
-     * @return the txtEmail
-     */
-    public JTextField getTxtUsername() {
-        return txtEmail;
-    }
-
-    /**
-     * @return the txtPassword
-     */
-    public JPasswordField getTxtPassword() {
-        return txtPassword;
-    }
-
-    public void setTxtUsername(String name) {
-        this.getTxtUsername().setText(name);
     }
 
     public static void main(String[] args) {

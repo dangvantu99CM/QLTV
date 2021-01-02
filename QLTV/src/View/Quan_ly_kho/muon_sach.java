@@ -87,7 +87,7 @@ public class muon_sach extends JFrame {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
-
+        
         lblTnSch = new JLabel("T\u00EAn s\u00E1ch");
         lblTnSch.setBounds(24, 14, 89, 14);
         contentPane.add(lblTnSch);
@@ -155,7 +155,7 @@ public class muon_sach extends JFrame {
         btnT.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    FormRegister formRegister = new FormRegister(self);
+                    FormRegister formRegister = new FormRegister(self,-1);
                     self.dispose();
                 } catch (SQLException ex) {
                     Logger.getLogger(muon_sach.class.getName()).log(Level.SEVERE, null, ex);

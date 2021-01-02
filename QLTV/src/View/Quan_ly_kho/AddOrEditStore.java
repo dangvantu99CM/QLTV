@@ -19,21 +19,27 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import Database.ConnectDb;
+import Model.Da.Da.StoreDA;
+import Model.Da.Store;
 import View.Thong_bao.Message;
 
-public class tao_kho extends JFrame {
+public class AddOrEditStore extends JFrame {
 
     private JPanel contentPane;
     private JTextField textField;
     private JTextField textField_1;
-    private JTextField textField_2;
+    private JTextField textField_2,txtStatus;
     private Connection con = ConnectDb.connectDB();
 
     private Message mes = BaseClass.getMessage();
 
     private Validate validator = new Validate();
-    
-    JLabel lblTnKho,lblVTr,lblSlotMax;
+
+    private int store_id_edit = -1;
+
+    private StoreDA storeDa = new StoreDA();
+
+    JLabel lblTnKho, lblVTr, lblSlotMax,lblStatus;
 
     /**
      * Launch the application.
@@ -42,7 +48,7 @@ public class tao_kho extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    tao_kho frame = new tao_kho();
+                    AddOrEditStore frame = new AddOrEditStore(7);
                     frame.setLocationRelativeTo(null);
                     frame.setVisible(true);
 
@@ -56,7 +62,8 @@ public class tao_kho extends JFrame {
     /**
      * Create the frame.
      */
-    public tao_kho() {
+    public AddOrEditStore(int store_id_edit) throws SQLException {
+        this.store_id_edit = store_id_edit;
         JFrame self = this;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 460, 265);
@@ -80,6 +87,18 @@ public class tao_kho extends JFrame {
         lblSlotMax = new JLabel("Slot max");
 
         JButton btnThm = new JButton("Th\u00EAm");
+
+        if (store_id_edit != -1) {
+            System.out.println("store === " + store_id_edit);
+            btnThm.setText("Cập nhật");
+            Store store = storeDa.getStoreByID(store_id_edit);
+            if (store != null) {
+                textField.setText(store.getName());
+                textField_1.setText(store.getPosition());
+                textField_2.setText(String.valueOf(store.getSt_max_slot()));
+            }
+        }
+
         btnThm.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 String message = "";
@@ -95,24 +114,37 @@ public class tao_kho extends JFrame {
                 if (!message.equals("")) {
                     mes.showMessage("error", message);
                 } else {
-                    if (!textField.getText().equals("") && !textField_1.getText().equals("") && !textField_2.getText().equals("")) {
-                        if (con != null) {
-                            String sql = "INSERT INTO store(st_name, st_position, st_status, st_max_slot) VALUES (?, ?, ?, ?)";
-                            try {
-                                java.sql.PreparedStatement stmt = con.prepareStatement(sql);
-                                stmt.setString(1, textField.getText());
-                                stmt.setString(2, textField_1.getText());
-                                stmt.setInt(3, 1);
-                                stmt.setInt(4, Integer.valueOf(textField_2.getText()));
-                                stmt.execute();
-                                self.dispose();
-                                mes.showMessage("success", "Tạo kho thành công");
-                            } catch (SQLException e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
+                    if (store_id_edit != -1) {
+                        Store store = new Store();
+                        store.setPosition(textField_1.getText());
+                        store.setSt_max_slot(Integer.valueOf(textField_2.getText()));
+                        store.setName(textField.getText());
+                        boolean isEdit = storeDa.update(store_id_edit, store);
+                        if (isEdit) {
+                            mes.showMessage("success", "Cập nhật thành công");
+                        } else {
+                            mes.showMessage("error", "Cập nhật không thành công");
                         }
+                    } else {
+                        if (!textField.getText().equals("") && !textField_1.getText().equals("") && !textField_2.getText().equals("")) {
+                            if (con != null) {
+                                String sql = "INSERT INTO store(st_name, st_position, st_status, st_max_slot) VALUES (?, ?, ?, ?)";
+                                try {
+                                    java.sql.PreparedStatement stmt = con.prepareStatement(sql);
+                                    stmt.setString(1, textField.getText());
+                                    stmt.setString(2, textField_1.getText());
+                                    stmt.setInt(3, 1);
+                                    stmt.setInt(4, Integer.valueOf(textField_2.getText()));
+                                    stmt.execute();
+                                    self.dispose();
+                                    mes.showMessage("success", "Tạo kho thành công");
+                                } catch (SQLException e) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+                            }
 
+                        }
                     }
                 }
             }
