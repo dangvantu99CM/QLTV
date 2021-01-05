@@ -218,5 +218,6 @@ public class them_sach extends JFrame {
 
             }
         });
+        this.setVisible(true);
     }
 }

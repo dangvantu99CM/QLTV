@@ -14,8 +14,7 @@ public class UserExtension extends User {
     private String date_borrow = null;
     private String us_bo_status = null;
 
-    public UserExtension() {
-    };
+    public UserExtension() {};
         
     public String getDateBorrow() {
         return this.date_borrow;

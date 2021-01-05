@@ -249,6 +249,7 @@ public class muon_sach extends JFrame {
 
             }
         });
+        this.setVisible(true);
     }
 
     public void loadCombobox() {

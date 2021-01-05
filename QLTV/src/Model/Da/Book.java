@@ -21,6 +21,8 @@ public class Book {
     private String bookDateLimit;
     private double bookPrice;
     private String deletedAt;
+    private int borrowNumber;
+    private int emptyNumber;
 
     /**
      * @return the id
@@ -160,5 +162,43 @@ public class Book {
      */
     public void setDeletedAt(String deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    /**
+     * @return the borrowNumber
+     */
+    public int getBorrowNumber() {
+        return borrowNumber;
+    }
+
+    /**
+     * @param borrowNumber the borrowNumber to set
+     */
+    public void setBorrowNumber(int borrowNumber) {
+        this.borrowNumber = borrowNumber;
+    }
+
+    /**
+     * @return the emptyNumber
+     */
+    public int getEmptyNumber() {
+        return emptyNumber;
+    }
+
+    /**
+     * @param emptyNumber the emptyNumber to set
+     */
+    public void setEmptyNumber(int emptyNumber) {
+        this.emptyNumber = emptyNumber;
+    }
+    
+     public String toString() {
+        String book = "[" + " getId " + "=> " + this.getId()
+                + " ,getName " + "=> " + this.getName()
+                + " ,getAuthor " + "=> " + this.getAuthor()
+                + " ,getNumber " + "=> " + this.getNumber()
+                + " ,getEmptyNumber " + "=> " + this.getEmptyNumber()
+                + " ]";
+        return book;
     }
 }

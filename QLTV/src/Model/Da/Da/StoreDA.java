@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
+
 /**
  *
  * @author tudv
@@ -64,7 +67,33 @@ public class StoreDA implements MyInterface {
 
     @Override
     public ArrayList getAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<Store> listStores = new ArrayList<Store>();
+        if (con == null) {
+            mess.showMessage("error", "Connect to DB failed!");
+            return null;
+        } else {
+            try {
+                String sql = "SELECT * FROM store where store.deleted_at is null";
+                Statement stmt;
+                stmt = (Statement) con.createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    Store store = new Store();
+                    store.setId(rs.getInt(1));
+                    store.setName(rs.getString(2));
+                    store.setPosition(rs.getString(3));
+                    store.setStatus(rs.getInt(4));
+                    store.setSt_max_slot(rs.getInt(7));
+                    store.setSt_slot_current(rs.getInt(8));
+                    store.setSt_slot_empty(rs.getInt(9));
+                    store.setDeleted_at(rs.getString(10));
+                    listStores.add(store);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDA.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return listStores;
     }
 
     @Override
@@ -80,7 +109,7 @@ public class StoreDA implements MyInterface {
     @Override
     public boolean update(int id, Object item) {
         Store newStore = (Store) item;
-        if(newStore.getDeleted_at() != null){
+        if (newStore.getDeleted_at() != null) {
             return false;
         }
         if (con == null) {
@@ -99,7 +128,7 @@ public class StoreDA implements MyInterface {
                 stmt.setInt(3, newStore.getSt_max_slot());
                 stmt.setInt(4, id);
                 int count = stmt.executeUpdate();
-                if(count > 0){
+                if (count > 0) {
                     return true;
                 }
             } catch (SQLException ex) {
