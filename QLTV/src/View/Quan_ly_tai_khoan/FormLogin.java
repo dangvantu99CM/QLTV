@@ -4,6 +4,7 @@ import BaseClass.BaseClass;
 import BaseClass.Validate;
 import Controller.Quan_ly_tai_khoan.UserController;
 import Model.Da.Da.UserDA;
+import View.Quan_ly_kho.Manager;
 import View.Thong_bao.Message;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -143,6 +144,7 @@ public class FormLogin extends JFrame {
                     } else {
                         if (userController.login(txtEmail.getText(), txtPassword.getText())) {
                             self.dispose();
+                            Manager m = new Manager();
                         } else {
                             mes.showMessage("error", "Mật khẩu hoặc Email không đúng");
                         }
