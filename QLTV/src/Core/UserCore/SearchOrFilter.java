@@ -36,7 +36,7 @@ public class SearchOrFilter {
             + " join book on book.id = user_book.bo_id "
             + " where user.deleted_at is null  AND user_book.delete_at is null  AND book.deleted_at is null ";
 
-    private ArrayList<UserExtension> baseListUser = userDA.getAll();
+    private ArrayList<UserExtension> baseListUser = null;
 
     /**
      *
@@ -115,6 +115,7 @@ public class SearchOrFilter {
      * @return Danh sach User phu hop
      */
     public ArrayList filterUser(String from_date, String to_date, String status) throws SQLException {
+        baseListUser = userDA.getAll();
         ArrayList<UserExtension> result = new ArrayList<UserExtension>();
         String sql = "";
         int flag = 0;

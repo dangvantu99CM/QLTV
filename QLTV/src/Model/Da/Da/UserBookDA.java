@@ -132,7 +132,7 @@ public class UserBookDA implements MyInterface {
             mess.showMessage("error", "Connect to DB failed!");
             return null;
         } else {
-            String sql = baseSql+" WHERE us_id = ? AND delete_at is null group by user_book.us_id,user_book.bo_id";
+            String sql = baseSql+" WHERE us_id = ? AND user_book.delete_at is null AND book.deleted_at is null AND store.deleted_at is null group by user_book.us_id,user_book.bo_id";
             java.sql.PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, us_id);
             ResultSet rs = stmt.executeQuery();
@@ -160,7 +160,7 @@ public class UserBookDA implements MyInterface {
             mess.showMessage("error", "Connect to DB failed!");
             return null;
         } else {
-            String sql = baseSql+" WHERE user_book.id = ? AND user_book.delete_at  is null";
+            String sql = baseSql+" WHERE user_book.id = ? AND user_book.delete_at is null AND book.deleted_at is null AND store.deleted_at is null";
             java.sql.PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, bo_us_id);
             ResultSet rs = stmt.executeQuery();

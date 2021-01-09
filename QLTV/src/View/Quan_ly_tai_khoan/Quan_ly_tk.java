@@ -397,7 +397,8 @@ public class Quan_ly_tk extends JPanel {
         String nameSvVal = txtNameTk.getText();
         String msvVal = txtMsvTk.getText();
         ArrayList<UserExtension> resultList = searchOrFilter.searchUser(msvVal, nameSvVal);
-        if (resultList.size() > 0) {
+      //  System.out.println("size == " + resultList.size());
+        if (resultList != null && resultList.size() > 0) {
             updateModel(resultList);
         } else {
             mes.showMessage("error", "Không có dữ liệu.");

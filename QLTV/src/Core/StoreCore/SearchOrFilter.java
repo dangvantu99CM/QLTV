@@ -33,7 +33,7 @@ public class SearchOrFilter {
 
     private String baseSql = "SELECT * FROM store where store.deleted_at is null ";
 
-    private ArrayList<Store> baseListStore = storeDA.getAll();
+    private ArrayList<Store> baseListStore = null;
 
     /**
      *
@@ -79,6 +79,7 @@ public class SearchOrFilter {
      */
     public ArrayList filterStore(String from_date, String to_date, String status) throws SQLException {
         ArrayList<Store> result = new ArrayList<Store>();
+        baseListStore = storeDA.getAll();
         String sql = "";
         int flag = 0;
         if ((from_date.equals("") && !to_date.equals("")) || (!from_date.equals("") && to_date.equals(""))) {
