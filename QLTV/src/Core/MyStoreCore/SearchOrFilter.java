@@ -27,9 +27,10 @@ public class SearchOrFilter {
 
     private BookDA bookDA = new BookDA();
 
-    private ArrayList<Book> baseListBook = bookDA.getAll();
+    private ArrayList<Book> baseListBook = null;
 
     public ArrayList filterBook(int us_id, String from_date, String to_date, String status, String store_id) throws SQLException {
+        baseListBook = bookDA.getAll();
         ArrayList<BookExtension> listResult = new ArrayList<>();
         String sql = "SELECT * FROM user_book "
                 + " JOIN book on user_book.bo_id = book.id "

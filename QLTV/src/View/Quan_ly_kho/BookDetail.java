@@ -37,6 +37,7 @@ public class BookDetail extends javax.swing.JDialog {
     private int id = -1;
 
     private BookDA bookDa = new BookDA();
+    private StoreDA storeDa = new StoreDA();
     private BookExtension book = null;
 
     private Object frameAfter = null;
@@ -128,7 +129,11 @@ public class BookDetail extends javax.swing.JDialog {
         btnDelete.setText("Xóa sách");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteActionPerformed(evt);
+                try {
+                    btnDeleteActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(BookDetail.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -260,12 +265,13 @@ public class BookDetail extends javax.swing.JDialog {
         muon_sach m = new muon_sach(book.getId());
     }
 
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         if (book != null) {
             boolean status = bookDa.delete(book.getId());
             if (status) {
                 this.dispose();
                 mes.showMessage("success", "Cập nhật thành công.");
+                storeDa.updateStore(Integer.valueOf(book.getStoreID()), "delete");
                 if (frameAfter instanceof Quan_ly_sach) {
                     Quan_ly_sach m = (Quan_ly_sach) frameAfter;
                     m.refreshModel();

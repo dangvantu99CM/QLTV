@@ -137,17 +137,34 @@ public class StoreDA implements MyInterface {
         }
         return false;
     }
-    
-    public boolean updateStoreWhenPayBook(int storeID) throws SQLException{
-        Store updateStore=  getStoreByID(storeID);
-        if(updateStore == null)return false;
-        String sql = "update store set st_slot_current =?,st_slot_empty =? where id = ? AND store.deleted_at is null";
+
+    public boolean updateStore(int id, String addOrEdit) throws SQLException {
+        int st_slot_current_update=0, st_slot_empty_update=0, status_update=1;
+        Store store = getStoreByID(id);
+        String sql = "update store set st_status =?,st_slot_current =?,st_slot_empty =? where id = ? AND store.deleted_at is null";
         java.sql.PreparedStatement stmt = con.prepareStatement(sql);
-        int st_slot_current = updateStore.getSt_slot_current()-1;
-        int st_slot_empty = updateStore.getSt_slot_current()+1;
-        stmt.setInt(1, st_slot_current);
-        stmt.setInt(2, st_slot_empty);
-        stmt.setInt(3, storeID);
+        if (addOrEdit.equals("add")) {
+            st_slot_current_update = store.getSt_slot_current() + 1;
+            st_slot_empty_update = store.getSt_slot_empty() - 1;
+            if (st_slot_empty_update <= 0) {
+                status_update = 2;
+            } else {
+                status_update = 1;
+            }
+        }
+        if (addOrEdit.equals("delete")) {
+            st_slot_current_update = store.getSt_slot_current() - 1;
+            st_slot_empty_update = store.getSt_slot_empty() + 1;
+            if (st_slot_empty_update <= 0) {
+                status_update = 2;
+            } else {
+                status_update = 1;
+            }
+        }
+        stmt.setInt(1, status_update);
+        stmt.setInt(2, st_slot_current_update);
+        stmt.setInt(3, st_slot_empty_update);
+        stmt.setInt(4, id);
         int count = stmt.executeUpdate();
         if (count > 0) {
             return true;

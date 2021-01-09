@@ -37,7 +37,6 @@ public class MyStoreCore {
             stmt.setInt(2, us_bo_id);
             int count = stmt.executeUpdate();
             if (count > 0) {
-                storeDA.updateStoreWhenPayBook(book.getStoreID());
                 return true;
             }
             return false;

@@ -47,6 +47,7 @@ public class SearchOrFilter {
      */
     public ArrayList searchUser(String msv, String name) throws SQLException {
         ArrayList<UserExtension> result = new ArrayList<UserExtension>();
+        baseListUser = userDA.getAll();
         int flag = 0;
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");

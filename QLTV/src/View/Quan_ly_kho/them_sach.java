@@ -5,6 +5,8 @@ import BaseClass.Validate;
 import java.awt.BorderLayout;
 import Database.ConnectDb;
 import Model.Da.Da.BookDA;
+import Model.Da.Da.StoreDA;
+import Model.Da.Store;
 import Model.Da.User;
 import View.Thong_bao.Message;
 import java.awt.Dialog;
@@ -44,6 +46,13 @@ public class them_sach extends JDialog {
     private Validate validator = new Validate();
 
     private Object frameAfter = null;
+
+    private StoreDA storeDa = new StoreDA();
+
+    private ArrayList<Store> listStore = storeDa.getAll();
+    
+    
+    private int store_id = -1;
 
     /**
      * Launch the application.
@@ -95,8 +104,8 @@ public class them_sach extends JDialog {
             }
         }
         String[] convert = new String[tenkho.size()];
-        for (int i = 0; i < tenkho.size(); i++) {
-            convert[i] = tenkho.get(i);
+        for (int i = 0; i < listStore.size(); i++) {
+            convert[i] = listStore.get(i).getId() + "-" + listStore.get(i).getName();
         }
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 359);
@@ -201,12 +210,12 @@ public class them_sach extends JDialog {
                 } else {
                     if (!textField.getText().equals("") && !textField_3.getText().equals("") && !textField_4.getText().equals("") && !textField_2.getText().equals("") && !textField_5.getText().equals("")) {
                         if (con != null) {
-                            String sql = "INSERT INTO book(bo_name, bo_id_store, bo_author, bo_status, bo_type, bo_number, bo_date_limit, bo_price) VALUE(?,?,?,?,?,?,?,?)";
+                            String sql = "INSERT INTO book(bo_name, bo_id_store, bo_author, bo_status, bo_type, bo_number, bo_date_limit, bo_price,bo_empty_number) VALUE(?,?,?,?,?,?,?,?,?)";
                             try {
                                 java.sql.PreparedStatement stmt = con.prepareStatement(sql);
                                 stmt.setString(1, textField.getText());
                                 stmt.setString(3, textField_2.getText());
-                                stmt.setInt(2, Integer.valueOf(kho.get(comboBox.getSelectedItem())));
+                                stmt.setInt(2, Integer.valueOf((comboBox.getSelectedItem().toString()).split("-")[0]));
                                 if (comboBox_1.getSelectedItem().equals("Giáo Trình")) {
                                     stmt.setInt(5, 1);
                                 } else {
@@ -217,9 +226,14 @@ public class them_sach extends JDialog {
                                 stmt.setInt(6, Integer.parseInt(textField_4.getText()));
                                 stmt.setInt(7, Integer.parseInt(textField_5.getText()));
                                 stmt.setFloat(8, Float.parseFloat(textField_3.getText()));
+                                stmt.setFloat(9, Integer.parseInt(textField_4.getText()));
                                 stmt.execute();
                                 self.dispose();
                                 mes.showMessage("success", "Thêm sách thành công");
+                                if (comboBox.getSelectedItem() != null) {
+                                    String store_id = (comboBox.getSelectedItem().toString()).split("-")[0];
+                                    storeDa.updateStore(Integer.valueOf(store_id), "add");
+                                }
                                 if (frameAfter != null) {
                                     if (frameAfter instanceof Quan_ly_sach) {
                                         Quan_ly_sach m = (Quan_ly_sach) frameAfter;

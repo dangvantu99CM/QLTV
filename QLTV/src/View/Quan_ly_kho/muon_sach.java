@@ -247,6 +247,11 @@ public class muon_sach extends JDialog {
                     if (storeCore.borrowBook(bo_id, us_id)) {
                         self.dispose();
                         mes.showMessage("success", "Muợn thành công.");
+                        try {
+                            bookDa.updateBook(bo_id,"borrow");
+                        } catch (SQLException ex) {
+                            Logger.getLogger(muon_sach.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } else {
                         mes.showMessage("error", "Xử lý thất bại.");
                     }

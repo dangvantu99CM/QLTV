@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class BookDA implements MyInterface {
 
-    private String baseSql = "SELECT book.*,store.* FROM book join store on book.bo_id_store = store.id where book.deleted_at is null ";
+    private String baseSql = "SELECT book.*,store.* FROM book join store on book.bo_id_store = store.id where book.deleted_at is null and store.deleted_at is null";
 
     public BookDA() {
     }
@@ -188,6 +188,40 @@ public class BookDA implements MyInterface {
             }
         }
         return listBook;
+    }
+    
+    public boolean updateBook(int id, String borrowOrPay) throws SQLException {
+        int st_slot_current_update=0, st_slot_empty_update=0, status_update=1;
+        Book book = getBookByID(id);
+        String sql = "update book set bo_status  =?,bo_borrow_number =?,bo_empty_number =? where id = ? AND book.deleted_at is null";
+        java.sql.PreparedStatement stmt = con.prepareStatement(sql);
+        if (borrowOrPay.equals("borrow")) {
+            st_slot_current_update = book.getBorrowNumber() + 1;
+            st_slot_empty_update = book.getEmptyNumber()- 1;
+            if (st_slot_empty_update <= 0) {
+                status_update = 2;
+            } else {
+                status_update = 1;
+            }
+        }
+        if (borrowOrPay.equals("pay")) {
+            st_slot_current_update = book.getBorrowNumber() - 1;
+            st_slot_empty_update = book.getEmptyNumber() + 1;
+            if (st_slot_empty_update <= 0) {
+                status_update = 2;
+            } else {
+                status_update = 1;
+            }
+        }
+        stmt.setInt(1, status_update);
+        stmt.setInt(2, st_slot_current_update);
+        stmt.setInt(3, st_slot_empty_update);
+        stmt.setInt(4, id);
+        int count = stmt.executeUpdate();
+        if (count > 0) {
+            return true;
+        }
+        return false;
     }
 
     public static void main(String[] args) throws SQLException {
