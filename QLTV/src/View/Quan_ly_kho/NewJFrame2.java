@@ -85,6 +85,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JSeparator();
         lblNameStudentTk = new javax.swing.JLabel();
         txtNameTk = new javax.swing.JTextField();
+        btnRefresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,6 +102,11 @@ public class NewJFrame2 extends javax.swing.JFrame {
         lblStatus.setText("Trạng thái");
 
         cbxStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxStatusActionPerformed(evt);
+            }
+        });
 
         btnFilter.setText("Lọc");
         btnFilter.addActionListener(new java.awt.event.ActionListener() {
@@ -147,6 +153,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
                             .addComponent(jSeparator1)
                             .addComponent(jScrollPane1)
                             .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
                                 .addComponent(lblFromDate, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -164,9 +171,9 @@ public class NewJFrame2 extends javax.swing.JFrame {
                                         .addComponent(cbxStore, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
                                         .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                                         .addComponent(cbxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE))
+                                        .addGap(18, 18, 18))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
                                         .addComponent(lblNameBook)
@@ -206,7 +213,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addComponent(btnAddBook, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -358,7 +365,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 532, Short.MAX_VALUE)
+            .addGap(0, 553, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -419,6 +426,13 @@ public class NewJFrame2 extends javax.swing.JFrame {
             }
         });
 
+        btnRefresh.setText("Làm mới");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -460,7 +474,8 @@ public class NewJFrame2 extends javax.swing.JFrame {
                                         .addComponent(btnFilterTk, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel4Layout.createSequentialGroup()
                                         .addComponent(btnSearchTk, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(btnAddTk, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -495,7 +510,8 @@ public class NewJFrame2 extends javax.swing.JFrame {
                         .addComponent(txtMsvTk, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblNameStudentTk, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtNameTk, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnSearchTk, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnSearchTk, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(lblMsvTk, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -519,7 +535,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 532, Short.MAX_VALUE)
+            .addGap(0, 553, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -587,6 +603,14 @@ public class NewJFrame2 extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNameTkActionPerformed
 
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void cbxStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxStatusActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -634,6 +658,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
     private javax.swing.JButton btnFilter;
     private javax.swing.JButton btnFilterStore;
     private javax.swing.JButton btnFilterTk;
+    private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSearchTk;
     private javax.swing.JButton btnStoreSearch;
     private javax.swing.JComboBox cbxStatus;

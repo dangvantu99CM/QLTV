@@ -35,7 +35,7 @@ public class UserDA implements MyInterface {
     private Message mess = BaseClass.getMessage();
 
     public static ArrayList<User> listUser = null;
-
+    
     @Override
     public ArrayList getAll() {
         ArrayList<UserExtension> listUser = new ArrayList<UserExtension>();
@@ -67,6 +67,36 @@ public class UserDA implements MyInterface {
                     user.setUserBookStatus(rs.getString(22));
                     user.setUserBookDateLimt(rs.getInt(35));
                     user.setIdUsBo(rs.getInt(17));
+                    listUser.add(user);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(UserDA.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return listUser;
+    }
+    
+    public ArrayList getAllUser() {
+        ArrayList<UserExtension> listUser = new ArrayList<UserExtension>();
+        if (con == null) {
+            mess.showMessage("error", "Connect to DB failed!");
+        } else {
+            try {
+                String sql = "SELECT * from user where user.deleted_at is null";
+                Statement stmt;
+                stmt = (Statement) con.createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()) {
+                    UserExtension user = new UserExtension();
+                    user.setID(rs.getInt(1));
+                    user.setEmail(rs.getString(6));
+                    user.setId_faculty(rs.getInt(11));
+                    user.setId_major(rs.getInt(14));
+                    user.setId_school(rs.getInt(15));
+                    user.setMasv(rs.getInt(5));
+                    user.setName(rs.getString(2));
+                    user.setDeletedAt(rs.getString(16));
+                    user.setRole(rs.getInt(8));
                     listUser.add(user);
                 }
             } catch (SQLException ex) {

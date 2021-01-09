@@ -4,7 +4,7 @@ import BaseClass.BaseClass;
 import BaseClass.Validate;
 import Controller.Quan_ly_tai_khoan.UserController;
 import Model.Da.Da.UserDA;
-import View.Quan_ly_kho.Manager;
+import View.MainManager.Manager;
 import View.Thong_bao.Message;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -30,6 +30,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -151,6 +152,8 @@ public class FormLogin extends JFrame {
                     }
                 } catch (SQLException ex) {
                     mes.showMessage("error", "Mật khẩu hoặc Email không đúng");
+                } catch (ParseException ex) {
+                    Logger.getLogger(FormLogin.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });

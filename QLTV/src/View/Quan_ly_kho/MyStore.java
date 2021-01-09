@@ -29,12 +29,13 @@ import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import javax.swing.JDialog;
 
 /**
  *
  * @author tudv
  */
-public class MyStore extends JFrame {
+public class MyStore extends JDialog {
     
     private javax.swing.JButton btnFilter;
     private javax.swing.JButton btnRefresh;
@@ -92,6 +93,12 @@ public class MyStore extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
+        setModal(true);
+        setResizable(false);
+        setAlwaysOnTop(true);
+        setModalityType(ModalityType.APPLICATION_MODAL);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
         lblTitle = new javax.swing.JLabel();
         lblFromDate = new javax.swing.JLabel();
         lblToDate = new javax.swing.JLabel();
@@ -112,7 +119,7 @@ public class MyStore extends JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblTitle.setText("MY-STORE");
 
@@ -336,7 +343,7 @@ public class MyStore extends JFrame {
     }       
     
      public void updateModel(ArrayList<BookExtension> listBok) throws ParseException, SQLException {
-        javax.swing.JFrame self = this;
+        JDialog self = this;
         long so_ngay_qua_han = 0;
         double tien_phat = 0.0;
         Calendar calendar = Calendar.getInstance();

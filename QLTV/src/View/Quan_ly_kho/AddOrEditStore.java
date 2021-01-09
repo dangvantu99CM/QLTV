@@ -22,13 +22,14 @@ import Database.ConnectDb;
 import Model.Da.Da.StoreDA;
 import Model.Da.Store;
 import View.Thong_bao.Message;
+import javax.swing.JDialog;
 
-public class AddOrEditStore extends JFrame {
+public class AddOrEditStore extends JDialog {
 
     private JPanel contentPane;
     private JTextField textField;
     private JTextField textField_1;
-    private JTextField textField_2,txtStatus;
+    private JTextField textField_2, txtStatus;
     private Connection con = ConnectDb.connectDB();
 
     private Message mes = BaseClass.getMessage();
@@ -39,7 +40,9 @@ public class AddOrEditStore extends JFrame {
 
     private StoreDA storeDa = new StoreDA();
 
-    JLabel lblTnKho, lblVTr, lblSlotMax,lblStatus;
+    JLabel lblTnKho, lblVTr, lblSlotMax, lblStatus;
+
+    private Object frameAfter = null;
 
     /**
      * Launch the application.
@@ -48,7 +51,7 @@ public class AddOrEditStore extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    AddOrEditStore frame = new AddOrEditStore(7);
+                    AddOrEditStore frame = new AddOrEditStore(7, null);
                     frame.setLocationRelativeTo(null);
                     frame.setVisible(true);
 
@@ -62,10 +65,17 @@ public class AddOrEditStore extends JFrame {
     /**
      * Create the frame.
      */
-    public AddOrEditStore(int store_id_edit) throws SQLException {
+    public AddOrEditStore(int store_id_edit, Object frameAfter) throws SQLException {
+        setModal(true);
+        setResizable(false);
+        setAlwaysOnTop(true);
+        setModalityType(ModalityType.APPLICATION_MODAL);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+        this.frameAfter = frameAfter;
         this.store_id_edit = store_id_edit;
-        JFrame self = this;
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JDialog self = this;
+        // setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 460, 265);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -101,7 +111,7 @@ public class AddOrEditStore extends JFrame {
 
         btnThm.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                String message = "";    
+                String message = "";
                 message += !(validator.validateFieldRequired(textField.getText(), lblTnKho.getText()).equals(""))
                         ? validator.validateFieldRequired(textField.getText(), lblTnKho.getText())
                         + "\n" : "";
@@ -121,23 +131,37 @@ public class AddOrEditStore extends JFrame {
                         store.setName(textField.getText());
                         boolean isEdit = storeDa.update(store_id_edit, store);
                         if (isEdit) {
+                            self.dispose();
                             mes.showMessage("success", "Cập nhật thành công");
+                            if (frameAfter != null) {
+                                if (frameAfter instanceof Quan_ly_kho) {
+                                    Quan_ly_kho quanLyKho = (Quan_ly_kho) frameAfter;
+                                    quanLyKho.refreshModel();
+                                }
+                            }
                         } else {
                             mes.showMessage("error", "Cập nhật không thành công");
                         }
                     } else {
                         if (!textField.getText().equals("") && !textField_1.getText().equals("") && !textField_2.getText().equals("")) {
                             if (con != null) {
-                                String sql = "INSERT INTO store(st_name, st_position, st_status, st_max_slot) VALUES (?, ?, ?, ?)";
+                                String sql = "INSERT INTO store(st_name, st_position, st_status, st_max_slot,st_slot_empty) VALUES (?,?, ?, ?, ?)";
                                 try {
                                     java.sql.PreparedStatement stmt = con.prepareStatement(sql);
                                     stmt.setString(1, textField.getText());
                                     stmt.setString(2, textField_1.getText());
                                     stmt.setInt(3, 1);
                                     stmt.setInt(4, Integer.valueOf(textField_2.getText()));
+                                    stmt.setInt(5, Integer.valueOf(textField_2.getText()));
                                     stmt.execute();
                                     self.dispose();
                                     mes.showMessage("success", "Tạo kho thành công");
+                                    if (frameAfter != null) {
+                                        if (frameAfter instanceof Quan_ly_kho) {
+                                            Quan_ly_kho quanLyKho = (Quan_ly_kho) frameAfter;
+                                            quanLyKho.refreshModel();
+                                        }
+                                    }
                                 } catch (SQLException e) {
                                     // TODO Auto-generated catch block
                                     e.printStackTrace();
@@ -190,5 +214,7 @@ public class AddOrEditStore extends JFrame {
                         .addGap(34))
         );
         contentPane.setLayout(gl_contentPane);
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 }

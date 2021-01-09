@@ -20,9 +20,9 @@ public class UserController {
     private SchoolDA school_model = new SchoolDA();
     private MajorDA major_model = new MajorDA();
     private FacultyDA faculty_model = new FacultyDA();
-    private JFrame view;
+    private Object view;
 
-    public UserController(JFrame view) {
+    public UserController(Object view) {
         this.view = view;
     }
 

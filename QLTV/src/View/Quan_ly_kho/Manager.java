@@ -5,7 +5,7 @@
  */
 package View.Quan_ly_kho;
 
-import Core.StoreCore.SearchOrFilter;
+import Core.BookCore.SearchOrFilter;
 import Model.Da.Book;
 import Model.Da.Da.BookDA;
 import Model.Da.Da.StoreDA;

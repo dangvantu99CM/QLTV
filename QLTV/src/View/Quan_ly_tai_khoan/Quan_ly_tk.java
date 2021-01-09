@@ -43,7 +43,7 @@ public class Quan_ly_tk extends JPanel {
 
     private javax.swing.JLabel lblFromDateTk, lbl_between1, lblTodateTk, lblStatusTk, lblNameStudentTk, lblMsvTk;
     private javax.swing.JComboBox cbxStatusTk;
-    private javax.swing.JButton btnFilterTk, btnSearchTk, btnAddTk;
+    private javax.swing.JButton btnFilterTk, btnSearchTk, btnAddTk, btnRefresh;
     private javax.swing.JTable tbtDataTK;
     private javax.swing.JScrollPane jScrollPane2;
 
@@ -89,6 +89,7 @@ public class Quan_ly_tk extends JPanel {
         btnFilterTk = new JButton();
         btnSearchTk = new JButton();
         btnAddTk = new JButton();
+        btnRefresh = new JButton();
 
         dateFromTk = new com.toedter.calendar.JDateChooser();
         dateToTk = new com.toedter.calendar.JDateChooser();
@@ -163,6 +164,20 @@ public class Quan_ly_tk extends JPanel {
 
         lblNameStudentTk.setText("Tên sinh viên");
 
+        btnRefresh.setText("Làm mới");
+
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                try {
+                    btnRefreshActionPerformed(evt);
+                } catch (ParseException ex) {
+                    Logger.getLogger(Quan_ly_tk.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Quan_ly_tk.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -204,9 +219,11 @@ public class Quan_ly_tk extends JPanel {
                                                                         .addComponent(btnFilterTk, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                                 .addGroup(jPanel4Layout.createSequentialGroup()
                                                                         .addComponent(btnSearchTk, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addGap(0, 0, Short.MAX_VALUE))))
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                        .addComponent(btnRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                                 .addGroup(jPanel4Layout.createSequentialGroup()
-                                                        .addGap(0, 0, Short.MAX_VALUE).addComponent(btnAddTk, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                        .addGap(0, 0, Short.MAX_VALUE)
+                                                        .addComponent(btnAddTk, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addGap(15, 15, 15))
                                 .addGroup(jPanel4Layout.createSequentialGroup()
                                         .addComponent(jSeparator4)
@@ -238,7 +255,8 @@ public class Quan_ly_tk extends JPanel {
                                         .addComponent(txtMsvTk, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(lblNameStudentTk, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(txtNameTk, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(btnSearchTk, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(btnSearchTk, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addComponent(lblMsvTk, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                         .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -318,14 +336,14 @@ public class Quan_ly_tk extends JPanel {
                 long ngay_tra = dateNow.getTime();
                 long han_tra = calendar.getTime().getTime();
                 double so_ngay_qua_han = (double) Math.abs((han_tra - ngay_tra)) / (double) (24 * 3600 * 1000);
-                
+
                 DecimalFormat df = new DecimalFormat("#");
                 so_ngay_qua_han = Double.valueOf(df.format(so_ngay_qua_han));
-                if(so_ngay_qua_han == 0){
+                if (so_ngay_qua_han == 0) {
                     so_ngay_qua_han = 1;
                 }
                 double tien_phat = so_ngay_qua_han * 2000;
-               // System.out.println("date borrow == " + user.getDateBorrow());
+                // System.out.println("date borrow == " + user.getDateBorrow());
                 // values[6] = so_ngay_qua_han;
                 //values[7] = Math.abs(tien_phat);
                 // System.out.println("us_id == "  + user.getIdUsBo() + ",  so_ngay_qua_han == " + so_ngay_qua_han + ", tien_phat == " + tien_phat);
@@ -369,6 +387,10 @@ public class Quan_ly_tk extends JPanel {
 
         ArrayList<UserExtension> listFilter = searchOrFilter.filterUser(dateFrom, dateTo, status);
         updateModel(listFilter);
+    }
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) throws ParseException, SQLException {
+        updateModel(userDA.getAll());
     }
 
     private void btnSearchTkActionPerformed(java.awt.event.ActionEvent evt) throws SQLException, ParseException {

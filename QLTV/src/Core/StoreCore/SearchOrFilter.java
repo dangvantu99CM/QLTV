@@ -9,9 +9,12 @@ import BaseClass.BaseClass;
 import Model.Da.Book;
 import Model.Da.BookExtension;
 import Model.Da.Da.BookDA;
+import Model.Da.Da.StoreDA;
 import Model.Da.Da.UserDA;
+import Model.Da.Store;
 import Model.Da.UserExtension;
 import View.Thong_bao.Message;
+import com.mysql.jdbc.Statement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,11 +29,44 @@ public class SearchOrFilter {
     private Connection con = BaseClass.getConnectDb();
     private Message mess = BaseClass.getMessage();
 
-    private BookDA bookDA = new BookDA();
+    private StoreDA storeDA = new StoreDA();
 
-    private ArrayList<Book> baseListBook = bookDA.getAll();
-    
-    private String sql = "SELECT book.*,store.* FROM book join store on book.bo_id_store = store.id where book.deleted_at is null ";
+    private String baseSql = "SELECT * FROM store where store.deleted_at is null ";
+
+    private ArrayList<Store> baseListStore = storeDA.getAll();
+
+    /**
+     *
+     * @param msv
+     * @param name
+     * @return User tuong ung voi ma sinh vien , Hoac danh sach sinh vien trung
+     * ten neu msv la rong
+     */
+    public ArrayList searchSrore(String name) throws SQLException {
+        ArrayList<Store> result = new ArrayList<Store>();
+        int flag = 0;
+        if (con == null) {
+            mess.showMessage("error", "Connect to DB failed!");
+        } else {
+            String sql = "SELECT * FROM store where store.deleted_at is null and store.st_name  = ?";
+            java.sql.PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Store store = new Store();
+                store.setId(rs.getInt(1));
+                store.setName(rs.getString(2));
+                store.setPosition(rs.getString(3));
+                store.setStatus(rs.getInt(4));
+                store.setSt_max_slot(rs.getInt(7));
+                store.setSt_slot_current(rs.getInt(8));
+                store.setSt_slot_empty(rs.getInt(9));
+                store.setDeleted_at(rs.getString(10));
+                result.add(store);
+            }
+        }
+        return result;
+    }
 
     /**
      *
@@ -41,154 +77,76 @@ public class SearchOrFilter {
      * @param status : loc theo trang thai : dang muon , da tra, qua han
      * @return Danh sach User phu hop
      */
-    public ArrayList filterBook(String from_date, String to_date, String status, String store_id) throws SQLException {
-        ArrayList<BookExtension> result = new ArrayList<BookExtension>();
-        
+    public ArrayList filterStore(String from_date, String to_date, String status) throws SQLException {
+        ArrayList<Store> result = new ArrayList<Store>();
+        String sql = "";
         int flag = 0;
         if ((from_date.equals("") && !to_date.equals("")) || (!from_date.equals("") && to_date.equals(""))) {
             mess.showMessage("error", "Hay chon khoang thoi gian can loc");
-            return baseListBook;
+            return baseListStore;
         }
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
-            return baseListBook;
+            return baseListStore;
         } else {
             if (!from_date.equals("") && !to_date.equals("")) {
                 if (!status.equals("")) {
-                    if (!store_id.equals("")) {
-                        sql += "  AND book.bo_status = ? "
-                                + " AND create_at  >= ? "
-                                + " AND create_at  <= ? "
-                                + " AND bo_id_store = ? ";
-                        flag = 1;
-                    } else {
-                        sql += " AND book.bo_status = ? "
-                                + " AND create_at >= ? "
-                                + " AND create_at <= ? ";
-                        flag = 2;
-                    }
-
+                    sql = baseSql + " AND store.st_status = ? "
+                            + " AND store.created_at  >= ? "
+                            + " AND store.created_at  <= ? ";
+                    flag = 1;
                 } else {
-                    if (!store_id.equals("")) {
-                        sql += " AND create_at >= ? "
-                                + " AND create_at <= ? "
-                                + " AND bo_id_store = ? ";
-                        flag = 3;
-                    } else {
-                        sql += " AND create_at >= ? "
-                                + " AND create_at <= ? ";
-                        flag = 4;
-                    }
+                    sql = baseSql + " AND store.created_at  >= ? "
+                            + " AND store.created_at <= ? ";
+                    flag = 2;
                 }
             } else if (!status.equals("")) {
-                if (!store_id.equals("")) {
-                    sql += " AND book.bo_status = ? "
-                            + " AND bo_id_store = ? ";
-                    flag = 5;
-                } else {
-                    sql += " AND book.bo_status = ? ";
-                    flag = 6;
-                }
-            } else if (!store_id.equals("")) {
-                sql += " AND bo_id_store = ? ";
-                flag = 7;
+                sql = baseSql + " AND store.st_status = ? ";
+                flag = 3;
             } else {
-                return baseListBook;
+                return baseListStore;
             }
-
             java.sql.PreparedStatement stmt = con.prepareStatement(sql);
             switch (flag) {
                 case 1:
                     stmt.setInt(1, Integer.valueOf(status));
                     stmt.setString(2, from_date);
                     stmt.setString(3, to_date);
-                    stmt.setInt(4, Integer.valueOf(store_id));
                     break;
                 case 2:
-                    stmt.setInt(1, Integer.valueOf(status));
-                    stmt.setString(2, from_date);
-                    stmt.setString(3, to_date);
+                    stmt.setString(1, from_date);
+                    stmt.setString(2, to_date);
                     break;
                 case 3:
-                    stmt.setString(1, from_date);
-                    stmt.setString(2, to_date);
-                    stmt.setInt(3, Integer.valueOf(store_id));
-                    break;
-                case 4:
-                    stmt.setString(1, from_date);
-                    stmt.setString(2, to_date);
-                    break;
-                case 5:
                     stmt.setInt(1, Integer.valueOf(status));
-                    stmt.setInt(2, Integer.valueOf(store_id));
-                    break;
-                case 6:
-                    stmt.setInt(1, Integer.valueOf(status));
-                    break;
-                case 7:
-                    stmt.setInt(1, Integer.valueOf(store_id));
                     break;
                 default:
             }
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                BookExtension book = new BookExtension();
-                book.setId(rs.getInt(1));
-                book.setStoreID(rs.getInt(3));
-                book.setName(rs.getString(2));
-                book.setType(rs.getInt(6));
-                book.setBookPrice(rs.getDouble(11));
-                book.setDeletedAt(rs.getString(12));
-                book.setAuthor(rs.getString(4));
-                book.setBorrowNumber(rs.getInt(13));
-                book.setEmptyNumber(rs.getInt(14));
-                book.setNumber(rs.getInt(7));
-                book.setStoreName(rs.getString(17));
-                book.setStatus(rs.getInt(5));
-                result.add(book);
+                Store store = new Store();
+                store.setId(rs.getInt(1));
+                store.setName(rs.getString(2));
+                store.setPosition(rs.getString(3));
+                store.setStatus(rs.getInt(4));
+                store.setSt_max_slot(rs.getInt(7));
+                store.setSt_slot_current(rs.getInt(8));
+                store.setSt_slot_empty(rs.getInt(9));
+                store.setDeleted_at(rs.getString(10));
+                result.add(store);
             }
         }
         return result;
     }
 
-    public ArrayList searchBook(String nameBook) throws SQLException {
-        ArrayList<BookExtension> listResult = new ArrayList<>();
-        if (con == null) {
-            mess.showMessage("error", "Connect to DB failed!");
-            return null;
-        } else {
-            sql ="SELECT book.*,store.* FROM book join store on book.bo_id_store = store.id where book.deleted_at is null and book.bo_name=? ";
-            java.sql.PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, nameBook);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                BookExtension book = new BookExtension();
-                book.setId(rs.getInt(1));
-                book.setStoreID(rs.getInt(3));
-                book.setName(rs.getString(2));
-                book.setType(rs.getInt(6));
-                book.setBookPrice(rs.getDouble(11));
-                book.setDeletedAt(rs.getString(12));
-                book.setAuthor(rs.getString(4));
-                book.setBorrowNumber(rs.getInt(13));
-                book.setEmptyNumber(rs.getInt(14));
-                book.setNumber(rs.getInt(7));
-                book.setStoreName(rs.getString(17));
-                book.setStatus(rs.getInt(5));
-                listResult.add(book);
-            }
-        }
-        return listResult;
-    }
-
     public static void main(String[] args) throws SQLException {
         SearchOrFilter se = new SearchOrFilter();
         ArrayList<Book> liBo = new ArrayList<Book>();
-        liBo = se.filterBook("2020-12-01 17:01:05", "2020-12-30 17:01:05", "1", "1");
-        System.out.println("sssss == " + liBo.size());
-        for (Book bo : liBo) {
-            System.out.println(bo.toString());
-        }
+     //   liBo = se.filterBook("2020-12-01 17:01:05", "2020-12-30 17:01:05", "1", "1");
+//        System.out.println("sssss == " + liBo.size());
+//        for (Book bo : liBo) {
+//            System.out.println(bo.toString());
+//        }
     }
 
 }

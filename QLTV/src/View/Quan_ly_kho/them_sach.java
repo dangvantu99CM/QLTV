@@ -7,6 +7,7 @@ import Database.ConnectDb;
 import Model.Da.Da.BookDA;
 import Model.Da.User;
 import View.Thong_bao.Message;
+import java.awt.Dialog;
 
 import java.awt.EventQueue;
 
@@ -26,8 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDialog;
 
-public class them_sach extends JFrame {
+public class them_sach extends JDialog {
 
     private JPanel contentPane;
     private JTextField textField;
@@ -62,10 +64,17 @@ public class them_sach extends JFrame {
 
     /**
      * Create the frame.
+     *
+     * @param frameAfter
      */
     public them_sach(Object frameAfter) {
+        setModal(true);
+        setResizable(false);
+        setAlwaysOnTop(true);
+        setModalityType(ModalityType.APPLICATION_MODAL);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         this.frameAfter = frameAfter;
-        JFrame self = this;
+        JDialog self = this;
         Map<String, Integer> kho = new HashMap();
         ArrayList<String> tenkho = new ArrayList();
 
@@ -89,7 +98,7 @@ public class them_sach extends JFrame {
         for (int i = 0; i < tenkho.size(); i++) {
             convert[i] = tenkho.get(i);
         }
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 359);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

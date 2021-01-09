@@ -42,6 +42,11 @@ public class BookDetail extends javax.swing.JDialog {
     private Object frameAfter = null;
 
     public BookDetail(int id, Object frameAfter) throws SQLException {
+        setModal(true);
+        setResizable(false);
+        setAlwaysOnTop(true);
+        setModalityType(ModalityType.APPLICATION_MODAL);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         this.id = id;
         this.frameAfter = frameAfter;
         User user = new User();
@@ -218,7 +223,7 @@ public class BookDetail extends javax.swing.JDialog {
             txtNumber.setText(String.valueOf(book.getNumber()));
             txtDaMuon.setText(String.valueOf(book.getBorrowNumber()));
             txtConLai.setText(String.valueOf(book.getBorrowNumber()));
-            txtStatus.setText(book.getStatus()==2?"Đã mượn hết":"Dỗi");
+            txtStatus.setText(book.getStatus() == 2 ? "Đã mượn hết" : "Dỗi");
             txtStore.setText(book.getStoreName());
         }
         pack();
@@ -232,8 +237,8 @@ public class BookDetail extends javax.swing.JDialog {
         bo.setNumber(Integer.valueOf(txtNumber.getText()));
         boolean status = bookDa.update(book.getId(), bo);
         if (status) {
-            mes.showMessage("success", "Cập nhật thành công.");
             self.dispose();
+            mes.showMessage("success", "Cập nhật thành công.");
             if (frameAfter != null) {
                 if (frameAfter instanceof Quan_ly_sach) {
                     Quan_ly_sach m = (Quan_ly_sach) frameAfter;
@@ -251,6 +256,7 @@ public class BookDetail extends javax.swing.JDialog {
     }
 
     private void btnMuonSachActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+        this.dispose();
         muon_sach m = new muon_sach(book.getId());
     }
 
@@ -259,11 +265,13 @@ public class BookDetail extends javax.swing.JDialog {
             boolean status = bookDa.delete(book.getId());
             if (status) {
                 this.dispose();
-                if (frameAfter instanceof Manager) {
-                    Manager m = (Manager) frameAfter;
-                    BookDA bookDa = new BookDA();
-                    m.updateModel(bookDa.getAll());
+                mes.showMessage("success", "Cập nhật thành công.");
+                if (frameAfter instanceof Quan_ly_sach) {
+                    Quan_ly_sach m = (Quan_ly_sach) frameAfter;
+                    m.refreshModel();
                 }
+            } else {
+                mes.showMessage("error", "Xử lý thất bại.");
             }
         }
 

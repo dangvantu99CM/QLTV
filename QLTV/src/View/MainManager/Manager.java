@@ -24,6 +24,8 @@ public class Manager extends JFrame {
 
     public Manager() throws ParseException, SQLException {
         initComponents();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -49,7 +51,7 @@ public class Manager extends JFrame {
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jTabbedPane1)
         );
-
+        this.setResizable(false);
         pack();
     }
 

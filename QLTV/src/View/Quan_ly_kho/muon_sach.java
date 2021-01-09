@@ -36,8 +36,9 @@ import View.Thong_bao.Message;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDialog;
 
-public class muon_sach extends JFrame {
+public class muon_sach extends JDialog {
 
     private JPanel contentPane;
     private Connection con = ConnectDb.connectDB();
@@ -52,7 +53,7 @@ public class muon_sach extends JFrame {
     public UserDA userDa = new UserDA();
 
     public ArrayList<Book> listBook = bookDa.getAll();
-    public ArrayList<User> listUser = userDa.getAll();
+    public ArrayList<User> listUser = userDa.getAllUser();
     
     private Validate validator = new Validate();
 
@@ -63,9 +64,9 @@ public class muon_sach extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    muon_sach frame = new muon_sach(8);
+                    muon_sach frame = new muon_sach(-1);
                     frame.setLocationRelativeTo(null);
-                    frame.setVisible(true);
+                    //frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -77,11 +78,15 @@ public class muon_sach extends JFrame {
      * Create the frame.
      */
     public muon_sach(int id_book) throws SQLException {
-
-        JFrame self = this;
+        setModal(true);
+        setResizable(false);
+        setAlwaysOnTop(true);
+        setModalityType(ModalityType.APPLICATION_MODAL);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        JDialog self = this;
         Book bo = bookDa.getBookByID(id_book);
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 450, 300);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -155,8 +160,8 @@ public class muon_sach extends JFrame {
         btnT.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    FormRegister formRegister = new FormRegister(self,-1);
                     self.dispose();
+                    FormRegister formRegister = new FormRegister(self,-1);
                 } catch (SQLException ex) {
                     Logger.getLogger(muon_sach.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -255,7 +260,7 @@ public class muon_sach extends JFrame {
 
     public void loadCombobox() {
         comboBox_2.removeAllItems();
-        listUser = userDa.getAll();
+        listUser = userDa.getAllUser();
         for (User u : listUser) {
             comboBox_2.addItem(u.getID() + "-" + u.getName());
         }

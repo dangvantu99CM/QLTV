@@ -6,7 +6,7 @@
 package View.Quan_ly_kho;
 
 import BaseClass.BaseClass;
-import Core.StoreCore.SearchOrFilter;
+import Core.BookCore.SearchOrFilter;
 import Model.Da.Book;
 import Model.Da.BookExtension;
 import Model.Da.Da.BookDA;
@@ -44,7 +44,7 @@ public class Quan_ly_sach extends JPanel {
     private javax.swing.JSeparator jSeparator2, jSeparator1;
 
     private javax.swing.JPanel jPanel1;
-    
+
     private DefaultTableModel model;
     private JScrollPane scrollPane;
 
@@ -249,16 +249,15 @@ public class Quan_ly_sach extends JPanel {
         if (DateChooserFromDate.getDate() != null) {
             dateFrom = sdf.format(DateChooserFromDate.getDate());
         }
-        System.out.println("date from === " + dateFrom);
+
         if (DateChooserFromDate.getDate() != null) {
             dateTo = sdf.format(DateChooserTodate.getDate());
         }
-        System.out.println("date to === " + dateTo);
+
         if (cbxStore.getSelectedItem() != null) {
             if (!cbxStore.getSelectedItem().toString().equals("Tất cả")) {
                 store = (cbxStore.getSelectedItem().toString()).split("-")[0];
             }
-            System.out.println("store == " + store);
         }
         if (cbxStatus.getSelectedItem() != null) {
             if (!cbxStore.getSelectedItem().toString().equals("")) {
@@ -273,10 +272,14 @@ public class Quan_ly_sach extends JPanel {
                     status = "2";
                 }
             }
-            System.out.println("status == " + status);
-        }
-        System.out.println("status == " + status);
 
+        }
+        System.out.println("==============================");
+        System.out.println("date from === " + dateFrom);
+        System.out.println("date to === " + dateTo);
+        System.out.println("store == " + store);
+        System.out.println("status == " + status);
+        System.out.println("==============================");
         ArrayList<BookExtension> listFilter = searchOrFilter.filterBook(dateFrom, dateTo, status, store);
         updateModel(listFilter);
     }
@@ -284,7 +287,7 @@ public class Quan_ly_sach extends JPanel {
     private void btnBoSearchActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
         String nameBookVal = txtBoSearch.getText();
         ArrayList<BookExtension> resultList = searchOrFilter.searchBook(nameBookVal);
-        System.out.println("size === "  + resultList.size());
+        System.out.println("size === " + resultList.size());
         if (resultList.size() > 0) {
             updateModel(resultList);
         } else {
@@ -311,7 +314,6 @@ public class Quan_ly_sach extends JPanel {
             values[3] = book.getNumber();
             values[4] = book.getStoreName();
             values[5] = book.getStatus() == 1 ? "Dỗi" : "Đã mượn hết";
-            System.out.println("ssssss == " + book.getStatus());
             model.addRow(values);
         }
         tbtData.setModel(model);
@@ -323,5 +325,9 @@ public class Quan_ly_sach extends JPanel {
         }
         cbxStore.addItem("Tất cả");
         cbxStore.setSelectedIndex(listStores.size());
+    }
+    
+    public void refreshModel(){
+        updateModel(bookDa.getAll());
     }
 }

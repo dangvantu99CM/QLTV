@@ -12,7 +12,12 @@ import Model.Da.Da.BookDA;
 import Model.Da.Da.StoreDA;
 import Model.Da.Store;
 import View.Thong_bao.Message;
+import java.awt.event.MouseAdapter;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -58,6 +63,7 @@ public class Quan_ly_kho extends JPanel {
     }
 
     private void init() {
+        JPanel self = this;
         jPanel5 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
 
@@ -92,7 +98,7 @@ public class Quan_ly_kho extends JPanel {
 
         lblStoreStatus.setText("Trạng thái");
 
-        //cbxStatusStore.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        cbxStatusStore.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"", "Còn chỗ", "Hết chỗ"}));
         cbxStatusStore.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxStatusStoreActionPerformed(evt);
@@ -102,7 +108,11 @@ public class Quan_ly_kho extends JPanel {
         btnFilterStore.setText("Lọc");
         btnFilterStore.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFilterStoreActionPerformed(evt);
+                try {
+                    btnFilterStoreActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Quan_ly_kho.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -118,7 +128,7 @@ public class Quan_ly_kho extends JPanel {
         model.addColumn("Số lượng");
         model.addColumn("Số lượng trống");
         model.addColumn("Trạng thái");
-        
+
         jScrollPane3.setViewportView(tbtDataStore);
 
         lblStoreName.setText("Tên kho");
@@ -126,14 +136,22 @@ public class Quan_ly_kho extends JPanel {
         btnStoreSearch.setText("Tìm");
         btnStoreSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnStoreSearchActionPerformed(evt);
+                try {
+                    btnStoreSearchActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Quan_ly_kho.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
         btnAddStore.setText("Thêm kho");
         btnAddStore.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddStoreActionPerformed(evt);
+                try {
+                    btnAddStoreActionPerformed(evt);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Quan_ly_kho.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -234,25 +252,72 @@ public class Quan_ly_kho extends JPanel {
                                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE)))
         );
-
+        tbtDataStore.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                String data = (String) tbtDataStore.getValueAt(tbtDataStore.getSelectedRow(), 0);
+                try {
+                    AddOrEditStore addOrEdit = new AddOrEditStore(Integer.valueOf(data), self);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Quan_ly_kho.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }
 
-    private void btnAddStoreActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    private void btnAddStoreActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+        AddOrEditStore addOrEdit = new AddOrEditStore(-1,this);
     }
 
     private void cbxStatusStoreActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void btnStoreSearchActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    private void btnStoreSearchActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+        String nameStore = txtSearchStore.getText();
+        System.out.println("text === " + nameStore);
+        ArrayList<Store> resultList = searchOrFilter.searchSrore(nameStore);
+        if (resultList.size() > 0) {
+            updateModel(resultList);
+        } else {
+            mes.showMessage("error", "Không có dữ liệu.");
+            updateModel(listStores);
+        }
     }
 
-    private void btnFilterStoreActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    private void btnFilterStoreActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateFrom = "";
+        String dateTo = "";
+        String status = "";
+        if (DateChooserFromDateStore.getDate() != null) {
+            dateFrom = sdf.format(DateChooserFromDateStore.getDate());
+        }
+        System.out.println("date from === " + dateFrom);
+        if (DateChooserTodateStore.getDate() != null) {
+            dateTo = sdf.format(DateChooserTodateStore.getDate());
+        }
+        System.out.println("date to === " + dateTo);
+        if (cbxStatusStore.getSelectedItem() != null) {
+            if (!cbxStatusStore.getSelectedItem().toString().equals("")) {
+                String selectedVal = cbxStatusStore.getSelectedItem().toString();
+                if (selectedVal.equals("")) {
+                    status = "";
+                }
+                if (selectedVal.equals("Còn chỗ")) {
+                    status = "1";
+                }
+                if (selectedVal.equals("Hết chỗ")) {
+                    status = "2";
+                }
+            }
+            System.out.println("status == " + status);
+        }
+        System.out.println("status == " + status);
+
+        ArrayList<Store> listFilter = searchOrFilter.filterStore(dateFrom, dateTo, status);
+        updateModel(listFilter);
     }
-    
+
     public void updateModel(ArrayList<Store> listStores) {
         int rowCount = model.getRowCount();
         for (int i = rowCount - 1; i >= 0; i--) {
@@ -265,10 +330,14 @@ public class Quan_ly_kho extends JPanel {
             values[2] = store.getPosition();
             values[3] = store.getSt_max_slot();
             values[4] = store.getSt_slot_empty();
-            values[5] = store.getSt_slot_empty()!= 0 ? "Còn chỗ" : "Đã hết chỗ";
+            values[5] = store.getSt_slot_empty() != 0 ? "Còn chỗ" : "Đã hết chỗ";
             model.addRow(values);
         }
         tbtDataStore.setModel(model);
+    }
+    
+    public void refreshModel(){
+        updateModel(storeDa.getAll());
     }
 
 }

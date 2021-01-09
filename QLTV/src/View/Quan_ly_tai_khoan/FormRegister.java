@@ -40,7 +40,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 
-public class FormRegister<T> extends JFrame {
+public class FormRegister<T> extends JDialog {
 
     private Connection con = BaseClass.getConnectDb();
     private Message mes = BaseClass.getMessage();
@@ -67,14 +67,19 @@ public class FormRegister<T> extends JFrame {
     public ArrayList<Faculty> listFaculty;
     public ArrayList<Major> listMajor;
 
-    private JFrame frameAfter = null;
+    private Object frameAfter = null;
     private int userID = -1;
 
     private Validate validator = new Validate();
 
     private UserDA userDa = new UserDA();
 
-    public FormRegister(JFrame frameAfter, int userID) throws SQLException {
+    public FormRegister(Object frameAfter, int userID) throws SQLException {
+        setModal(true);
+        setResizable(false);
+        setAlwaysOnTop(true);
+        setModalityType(ModalityType.APPLICATION_MODAL);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         this.frameAfter = frameAfter;
         this.userID = userID;
         userController = new UserController(this);
@@ -136,6 +141,22 @@ public class FormRegister<T> extends JFrame {
         btnResgister = new JButton("Đăng Ký");
         btnCancel = new JButton("Thoát");
 
+        btnResgister.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnResgisterAction(e);
+            }
+        });
+
+        btnCancel.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnCancelAction(e);
+            }
+        });
+
         if (this.userID != -1) {
             loadCombobox((ArrayList<T>) listFaculty, cbxListFaculty, 2);
             loadCombobox((ArrayList<T>) listMajor, cbxListMajor, 3);
@@ -148,13 +169,56 @@ public class FormRegister<T> extends JFrame {
         contend.setBackground(new Color(0f, 0f, 0f, 0f));
         contend.setBorder(BorderFactory.createEmptyBorder(30, 400, 0, 0));
 
+        cbxListSchool.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String itemSelected = cbxListSchool.getSelectedItem().toString();
+                sch_id = Regex.findNumber(itemSelected);
+                try {
+                    listFaculty = userController.getListFacultyBySchId(sch_id);
+                    loadCombobox((ArrayList<T>) listFaculty, cbxListFaculty, 2);
+                    cbxListFaculty.setSelectedItem(null);
+                } catch (SQLException ex) {
+                    Logger.getLogger(FormRegister.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        cbxListFaculty.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object itemSelected = cbxListFaculty.getSelectedItem();
+                if (itemSelected != null) {
+                    try {
+                        fac_id = Regex.findNumber(itemSelected.toString());
+                        listMajor = userController.getListMajorByFacId(fac_id);
+                        loadCombobox((ArrayList<T>) listMajor, cbxListMajor, 3);
+                        cbxListMajor.setSelectedItem(null);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(FormRegister.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
+        cbxListMajor.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object itemSelected = cbxListMajor.getSelectedItem();
+                if (itemSelected != null) {
+                    maj_id = Regex.findNumber(itemSelected.toString());
+                }
+            }
+        });
+
         this.add(contend, BorderLayout.WEST);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.setVisible(true);
 
-        actionListener();
+        //actionListener();
 
     }
 
@@ -186,17 +250,102 @@ public class FormRegister<T> extends JFrame {
         cbx.setSelectedItem(null);
     }
 
-    public void actionListener() {
-        JFrame self = this;
-        btnCancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (frameAfter != null) {
-                    frameAfter.setVisible(true);
+    public void btnCancelAction(ActionEvent evt) {
+        this.dispose();
+        visibleFrame();
+    }
+
+    public void btnResgisterAction(ActionEvent evt) {
+        System.out.println("sssssssssssssssssssssss");
+        String message = "";
+        message += !(validator.validateFieldRequired(txtUsername.getText(), lblUsername.getText()).equals(""))
+                ? validator.validateFieldRequired(txtUsername.getText(), lblUsername.getText())
+                + "\n" : "";
+        message += !(validator.validateFieldRequired(txtPassword.getText(), lblPassword.getText()).equals(""))
+                ? validator.validateFieldRequired(txtPassword.getText(), lblPassword.getText())
+                + "\n" : "";
+        message += !(validator.validateFieldRequired(txtPasswordAgain.getText(), lblPasswordAgain.getText()).equals(""))
+                ? validator.validateFieldRequired(txtPasswordAgain.getText(), lblPasswordAgain.getText())
+                + "\n" : "";
+        message += !(validator.validateFieldRequired(txtMsv.getText(), lblMsv.getText())).equals("")
+                ? validator.validateFieldRequired(txtMsv.getText(), lblMsv.getText())
+                + "\n" : "";
+        message += !(validator.validateFieldRequired(txtEmail.getText(), lblEmail.getText()).equals(""))
+                ? validator.validateFieldRequired(txtEmail.getText(), lblEmail.getText())
+                + "\n" : "";
+        message += !(validator.validateSelected(cbxListSchool, lblSchool.getText())).equals("")
+                ? validator.validateSelected(cbxListSchool, lblSchool.getText())
+                + "\n" : "";
+        message += !(validator.validateSelected(cbxListFaculty, lblFaculty.getText())).equals("")
+                ? validator.validateSelected(cbxListFaculty, lblFaculty.getText())
+                + "\n" : "";
+        message += !(validator.validateSelected(cbxListMajor, lblMarjor.getText())).equals("")
+                ? validator.validateSelected(cbxListMajor, lblMarjor.getText())
+                + "\n" : "";
+        message += !(validator.validateEmail(txtEmail.getText()).equals(""))
+                ? validator.validateEmail(txtEmail.getText())
+                + "\n" : "";
+        message += !(validator.validateSamePass(txtPassword.getText(), txtPasswordAgain.getText()).equals(""))
+                ? validator.validateSamePass(txtPassword.getText(), txtPasswordAgain.getText())
+                : "";
+        if (!message.equals("")) {
+            mes.showMessage("error", message);
+        } else {
+            User us = new User();
+            us.setEmail(txtEmail.getText());
+            us.setName(txtUsername.getText());
+            us.setId_faculty(fac_id);
+            us.setId_major(maj_id);
+            us.setId_school(sch_id);
+            us.setPassword(txtPassword.getText());
+            us.setRole(2);
+            us.setMasv(Integer.valueOf(txtMsv.getText()));
+            if (userID != -1) {
+                if (!userDa.update(userID, us)) {
+                    mes.showMessage("error", "Cập nhật không thành công");
+                } else {
+                    mes.showMessage("success", "Cập nhật thành công");
+                    this.dispose();
                 }
-                self.dispose();
+            } else {
+                System.out.println("user == " + us.toString());
+                if (!userDa.create(us)) {
+                    mes.showMessage("error", "Tạo mới không thành công");
+                } else {
+                    //mes.showMessage("success", "Tạo mới thành công");
+                    this.dispose();
+                }
             }
-        });
+            if (frameAfter != null) {
+                if (frameAfter instanceof muon_sach) {
+                    muon_sach bookBorrow = (muon_sach) frameAfter;
+                    System.out.println("txtUsername ==  " + txtUsername.getText());
+                    System.out.println("txtMsv ==  " + txtMsv.getText());
+                    bookBorrow.textField.setText(txtUsername.getText());
+                    bookBorrow.textField_1.setText(txtMsv.getText());
+                    bookBorrow.loadCombobox();
+                    ArrayList<User> listUser = bookBorrow.listUser;
+                    for (int i = 0; i < listUser.size(); i++) {
+                        if (listUser.get(i).getMasv() == Integer.valueOf(txtMsv.getText())) {
+                            bookBorrow.comboBox_2.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                }
+                if (frameAfter instanceof FormLogin) {
+                    FormLogin formLogin = (FormLogin) frameAfter;
+                    formLogin.setTxtMail(txtEmail.getText());
+                    formLogin.setTxtPass(txtPassword.getText());
+                }
+                this.dispose();
+                visibleFrame();
+            }
+
+        }
+    }
+
+    public void actionListener() {
+        JDialog self = this;
 
         btnResgister.addActionListener(new ActionListener() {
             @Override
@@ -262,6 +411,8 @@ public class FormRegister<T> extends JFrame {
                     if (frameAfter != null) {
                         if (frameAfter instanceof muon_sach) {
                             muon_sach bookBorrow = (muon_sach) frameAfter;
+                            System.out.println("txtUsername ==  " + txtUsername.getText());
+                            System.out.println("txtMsv ==  " + txtMsv.getText());
                             bookBorrow.textField.setText(txtUsername.getText());
                             bookBorrow.textField_1.setText(txtMsv.getText());
                             bookBorrow.loadCombobox();
@@ -278,7 +429,7 @@ public class FormRegister<T> extends JFrame {
                             formLogin.setTxtMail(txtEmail.getText());
                             formLogin.setTxtPass(txtPassword.getText());
                         }
-                        frameAfter.setVisible(true);
+                        visibleFrame();
                         self.dispose();
                     }
 
@@ -340,10 +491,10 @@ public class FormRegister<T> extends JFrame {
             if (user.getId_school() != -1) {
                 setSelectedCombobox(cbxListSchool, user.getId_school(), 1, (ArrayList<T>) listSchool);
             }
-            if (user.getId_faculty()!= -1) {
+            if (user.getId_faculty() != -1) {
                 setSelectedCombobox(cbxListFaculty, user.getId_faculty(), 2, (ArrayList<T>) listFaculty);
             }
-            if (user.getId_major()!= -1) {
+            if (user.getId_major() != -1) {
                 setSelectedCombobox(cbxListMajor, user.getId_major(), 3, (ArrayList<T>) listMajor);
             }
         }
@@ -351,7 +502,9 @@ public class FormRegister<T> extends JFrame {
 
     public void setSelectedCombobox(JComboBox cbx, int value, int type, ArrayList<T> list) {
         int size = list.size();
-        if(size <= 0) return;
+        if (size <= 0) {
+            return;
+        }
         for (int i = 0; i < size; i++) {
             if (type == 1) {
                 School school = new School();
@@ -383,8 +536,21 @@ public class FormRegister<T> extends JFrame {
         }
     }
 
+    public void visibleFrame() {
+        if (frameAfter != null) {
+            if (frameAfter instanceof JDialog) {
+                JDialog dialog = (JDialog) frameAfter;
+                dialog.setVisible(true);
+            } else {
+                JFrame frame = (JFrame) frameAfter;
+                frame.setVisible(true);
+            }
+
+        }
+    }
+
     public static void main(String[] args) throws SQLException {
-        FormRegister f = new FormRegister(null, 38);
+        FormRegister f = new FormRegister(null, -1);
         f.actionListener();
     }
 }
