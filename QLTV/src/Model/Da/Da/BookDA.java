@@ -30,6 +30,8 @@ import java.util.logging.Logger;
  */
 public class BookDA implements MyInterface {
 
+    private String baseSql = "SELECT book.*,store.* FROM book join store on book.bo_id_store = store.id where book.deleted_at is null ";
+
     public BookDA() {
     }
 
@@ -38,17 +40,17 @@ public class BookDA implements MyInterface {
 
     @Override
     public ArrayList getAll() {
-        ArrayList<Book> listBook = new ArrayList<Book>();
+        ArrayList<BookExtension> listBook = new ArrayList<BookExtension>();
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
         } else {
             try {
-                String sql = "SELECT * FROM book where deleted_at is null ";
+                String sql = baseSql;
                 Statement stmt;
                 stmt = (Statement) con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
                 while (rs.next()) {
-                    Book book = new Book();
+                    BookExtension book = new BookExtension();
                     book.setId(rs.getInt(1));
                     book.setStoreID(rs.getInt(3));
                     book.setName(rs.getString(2));
@@ -59,6 +61,8 @@ public class BookDA implements MyInterface {
                     book.setBorrowNumber(rs.getInt(13));
                     book.setEmptyNumber(rs.getInt(14));
                     book.setNumber(rs.getInt(7));
+                    book.setStoreName(rs.getString(17));
+                    book.setStatus(rs.getInt(5));
                     listBook.add(book);
                 }
             } catch (SQLException ex) {
@@ -68,13 +72,13 @@ public class BookDA implements MyInterface {
         return listBook;
     }
 
-    public Book getBookByID(int id) throws SQLException {
-        Book book = null;
+    public BookExtension getBookByID(int id) throws SQLException {
+        BookExtension book = null;
         if (con == null) {
             mess.showMessage("error", "Connect to DB failed!");
             return null;
         } else {
-            String sql = "SELECT * FROM book WHERE book.id = ? AND book.deleted_at is null";
+            String sql = baseSql + " AND book.id = ?";
             java.sql.PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -87,7 +91,11 @@ public class BookDA implements MyInterface {
                 book.setBookPrice(rs.getDouble(11));
                 book.setDeletedAt(rs.getString(12));
                 book.setAuthor(rs.getString(4));
-                //  book.setStoreName(rs);
+                book.setBorrowNumber(rs.getInt(13));
+                book.setEmptyNumber(rs.getInt(14));
+                book.setNumber(rs.getInt(7));
+                book.setStoreName(rs.getString(17));
+                book.setStatus(rs.getInt(5));
             }
         }
         return book;

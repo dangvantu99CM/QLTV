@@ -141,7 +141,7 @@ public class StoreDA implements MyInterface {
     public boolean updateStoreWhenPayBook(int storeID) throws SQLException{
         Store updateStore=  getStoreByID(storeID);
         if(updateStore == null)return false;
-        String sql = "update store set st_slot_current =?,st_slot_empty =?where id = ? AND store.delete_at is null";
+        String sql = "update store set st_slot_current =?,st_slot_empty =? where id = ? AND store.deleted_at is null";
         java.sql.PreparedStatement stmt = con.prepareStatement(sql);
         int st_slot_current = updateStore.getSt_slot_current()-1;
         int st_slot_empty = updateStore.getSt_slot_current()+1;

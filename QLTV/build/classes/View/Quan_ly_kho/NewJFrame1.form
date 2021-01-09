@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="lblNameAuthor" min="-2" pref="59" max="-2" attributes="0"/>
+                  <Component id="lblStatus" alignment="0" min="-2" pref="59" max="-2" attributes="0"/>
+                  <Component id="jSeparator1" min="-2" pref="136" max="-2" attributes="0"/>
+                  <Component id="btnPay" min="-2" pref="116" max="-2" attributes="0"/>
+                  <Component id="lblTitle" min="-2" pref="95" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblDateBorrow" alignment="0" min="-2" pref="67" max="-2" attributes="0"/>
+                          <Component id="lblNameBook" alignment="0" min="-2" pref="59" max="-2" attributes="0"/>
+                          <Component id="lblStore" alignment="0" min="-2" pref="59" max="-2" attributes="0"/>
+                          <Component id="lblQuaHan" alignment="0" min="-2" pref="59" max="-2" attributes="0"/>
+                          <Component id="lblTienPhat" alignment="0" min="-2" pref="59" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="txtTienPhat" min="-2" pref="229" max="-2" attributes="0"/>
+                          <Component id="txtQuaHan" min="-2" pref="229" max="-2" attributes="0"/>
+                          <Component id="txtStore" min="-2" pref="229" max="-2" attributes="0"/>
+                          <Component id="txtNameBook" min="-2" pref="229" max="-2" attributes="0"/>
+                          <Component id="txtNameAuthor" min="-2" pref="229" max="-2" attributes="0"/>
+                          <Component id="txtDateBorrow" min="-2" pref="229" max="-2" attributes="0"/>
+                          <Component id="txtStatus" alignment="0" min="-2" pref="229" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace pref="17" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="jSeparator1" min="-2" pref="12" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txtNameBook" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                  <Component id="lblNameBook" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblNameAuthor" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                  <Component id="txtNameAuthor" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblDateBorrow" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                  <Component id="txtDateBorrow" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblStatus" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                  <Component id="txtStatus" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblStore" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                  <Component id="txtStore" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="21" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblQuaHan" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                  <Component id="txtQuaHan" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblTienPhat" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                  <Component id="txtTienPhat" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnPay" min="-2" pref="33" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="lblTitle">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Th&#xf4;ng tin chi ti&#x1ebf;t"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSeparator" name="jSeparator1">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblNameAuthor">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="T&#xe1;c gi&#xe1;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtNameBook">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblNameBook">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="T&#xea;n s&#xe1;ch"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblStatus">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Tr&#x1ea1;ng th&#xe1;i"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblDateBorrow">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ng&#xe0;y m&#x1b0;&#x1ee3;n"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtNameAuthor">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtNameAuthorActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtStatus">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtStatusActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtDateBorrow">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblStore">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Kho"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtStore">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtStoreActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnPay">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Tr&#x1ea3; s&#xe1;ch"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPayActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblQuaHan">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Qu&#xe1; h&#x1ea1;n"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtQuaHan">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtQuaHanActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTienPhat">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ti&#x1ec1;n ph&#x1ea1;t"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtTienPhat">
+    </Component>
+  </SubComponents>
+</Form>

@@ -4,6 +4,7 @@ import BaseClass.BaseClass;
 import BaseClass.Validate;
 import java.awt.BorderLayout;
 import Database.ConnectDb;
+import Model.Da.Da.BookDA;
 import Model.Da.User;
 import View.Thong_bao.Message;
 
@@ -40,6 +41,8 @@ public class them_sach extends JFrame {
 
     private Validate validator = new Validate();
 
+    private Object frameAfter = null;
+
     /**
      * Launch the application.
      */
@@ -47,7 +50,7 @@ public class them_sach extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    them_sach frame = new them_sach();
+                    them_sach frame = new them_sach(null);
                     frame.setLocationRelativeTo(null);
                     frame.setVisible(true);
                 } catch (Exception e) {
@@ -60,7 +63,8 @@ public class them_sach extends JFrame {
     /**
      * Create the frame.
      */
-    public them_sach() {
+    public them_sach(Object frameAfter) {
+        this.frameAfter = frameAfter;
         JFrame self = this;
         Map<String, Integer> kho = new HashMap();
         ArrayList<String> tenkho = new ArrayList();
@@ -179,7 +183,7 @@ public class them_sach extends JFrame {
                         + "\n" : "";
                 message += !(validator.validateFieldRequired(textField_5.getText(), lblSNgyMn.getText()).equals(""))
                         ? validator.validateFieldRequired(textField_5.getText(), lblSNgyMn.getText())
-                        + "\n": "";
+                        + "\n" : "";
                 message += !(validator.validateFieldRequired(textField_2.getText(), label.getText()).equals(""))
                         ? validator.validateFieldRequired(textField_2.getText(), label.getText())
                         : "";
@@ -207,6 +211,13 @@ public class them_sach extends JFrame {
                                 stmt.execute();
                                 self.dispose();
                                 mes.showMessage("success", "Thêm sách thành công");
+                                if (frameAfter != null) {
+                                    if (frameAfter instanceof Quan_ly_sach) {
+                                        Quan_ly_sach m = (Quan_ly_sach) frameAfter;
+                                        BookDA bookDa = new BookDA();
+                                        m.updateModel(bookDa.getAll());
+                                    }
+                                }
                             } catch (SQLException e1) {
                                 // TODO Auto-generated catch block
                                 e1.printStackTrace();
@@ -218,6 +229,7 @@ public class them_sach extends JFrame {
 
             }
         });
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 }

@@ -101,7 +101,7 @@ public class AddOrEditStore extends JFrame {
 
         btnThm.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
-                String message = "";
+                String message = "";    
                 message += !(validator.validateFieldRequired(textField.getText(), lblTnKho.getText()).equals(""))
                         ? validator.validateFieldRequired(textField.getText(), lblTnKho.getText())
                         + "\n" : "";

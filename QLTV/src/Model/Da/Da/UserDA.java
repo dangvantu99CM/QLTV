@@ -43,11 +43,12 @@ public class UserDA implements MyInterface {
             mess.showMessage("error", "Connect to DB failed!");
         } else {
             try {
-                String sql = "SELECT * FROM user "
-                        + "left join user_book "
-                        + "on user.id = user_book.us_id "
-                        + "where user.deleted_at is null "
-                        + "group by user.id";
+                String sql = "SELECT user.*,user_book.*,book.* FROM user "
+                        + " left join user_book "
+                        + " on user.id = user_book.us_id "
+                        + " join book on book.id = user_book.bo_id "
+                        + " where user.deleted_at is null  AND user_book.delete_at is null  AND book.deleted_at is null "
+                        + " group by user.id,user_book.bo_id";
                 Statement stmt;
                 stmt = (Statement) con.createStatement();
                 ResultSet rs = stmt.executeQuery(sql);
@@ -64,6 +65,8 @@ public class UserDA implements MyInterface {
                     user.setRole(rs.getInt(8));
                     user.setDateBorrow(rs.getString(20));
                     user.setUserBookStatus(rs.getString(22));
+                    user.setUserBookDateLimt(rs.getInt(35));
+                    user.setIdUsBo(rs.getInt(17));
                     listUser.add(user);
                 }
             } catch (SQLException ex) {

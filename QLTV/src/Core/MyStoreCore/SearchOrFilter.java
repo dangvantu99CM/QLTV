@@ -50,14 +50,12 @@ public class SearchOrFilter {
                                 + " AND user_book.date_borrow <= ? "
                                 + " AND user_book.status = ? "
                                 + " AND store.id = ? ";
-                        System.out.println("11111111111111");
                         flag = 1;
                     } else {
                         sql += " WHERE user_book.date_borrow >= ? "
                                 + " AND user_book.date_borrow <= ? "
                                 + " AND user_book.status = ? ";
                         flag = 2;
-                        System.out.println("2222222222222");
                     }
 
                 } else {
@@ -65,35 +63,30 @@ public class SearchOrFilter {
                         sql += " WHERE user_book.date_borrow >= ? "
                                 + " AND user_book.date_borrow <= ? "
                                 + " AND store.id = ? ";
-                        System.out.println("3333333333333");
                         flag = 3;
                     } else {
                         sql += " WHERE user_book.date_borrow >= ? "
                                 + " AND user_book.date_borrow <= ? ";
                         flag = 4;
-                        System.out.println("4444444444");
                     }
                 }
             } else if (!status.equals("")) {
                 if (!store_id.equals("")) {
                     sql += " WHERE user_book.status = ? "
                             + " AND store.id = ? ";
-                    System.out.println("5555555555");
                     flag = 5;
                 } else {
                     sql += " WHERE user_book.status = ? ";
-                    System.out.println("66666666666666666");
                     flag = 6;
                 }
             } else if (!store_id.equals("")) {
                 sql += " WHERE store.id = ? ";
-                System.out.println("77777777777777");
                 flag = 7;
             }
             if (flag != 0) {
-                sql += " AND user_book.us_id = ? AND user_book.delete_at is null ";
+                sql += " AND user_book.us_id = ? AND user_book.delete_at is null group by user_book.us_id,user_book.bo_id";
             } else {
-                sql += " WHERE user_book.us_id = ? AND user_book.delete_at is null ";
+                sql += " WHERE user_book.us_id = ? AND user_book.delete_at is null group by user_book.us_id,user_book.bo_id";
             }
 
             java.sql.PreparedStatement stmt = con.prepareStatement(sql);
@@ -142,13 +135,14 @@ public class SearchOrFilter {
             while (rs.next()) {
                 BookExtension book = new BookExtension();
                 book.setId(rs.getInt(3));
-                book.setName(rs.getString(12));
-                book.setAuthor(rs.getString(14));
-                book.setStoreName(rs.getString(27));
+                book.setName(rs.getString(13));
+                book.setAuthor(rs.getString(15));
+                book.setStoreName(rs.getString(28));
                 book.setDateBorrow(rs.getString(4));
                 book.setStatus(rs.getInt(6));
-                book.setBookDateLimit(rs.getInt(18));
+                book.setBookDateLimit(rs.getInt(19));
                 book.setId_user_book(rs.getInt(1));
+                book.setTienPhat(rs.getDouble(7));
                 listResult.add(book);
             }
         }
@@ -164,7 +158,7 @@ public class SearchOrFilter {
             String sql = "SELECT * FROM user_book "
                     + " JOIN book on user_book.bo_id = book.id "
                     + " JOIN store on book.bo_id_store = store.id "
-                    + "WHERE us_id = ? AND book.bo_name = ? AND delete_at is null";
+                    + "WHERE us_id = ? AND book.bo_name = ? AND delete_at is null group by user_book.us_id,user_book.bo_id";
             java.sql.PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, us_id);
             stmt.setString(2, nameBook);
@@ -172,13 +166,14 @@ public class SearchOrFilter {
             while (rs.next()) {
                 BookExtension book = new BookExtension();
                 book.setId(rs.getInt(3));
-                book.setName(rs.getString(12));
-                book.setAuthor(rs.getString(14));
-                book.setStoreName(rs.getString(27));
+                book.setName(rs.getString(13));
+                book.setAuthor(rs.getString(15));
+                book.setStoreName(rs.getString(28));
                 book.setDateBorrow(rs.getString(4));
                 book.setStatus(rs.getInt(6));
-                book.setBookDateLimit(rs.getInt(18));
+                book.setBookDateLimit(rs.getInt(19));
                 book.setId_user_book(rs.getInt(1));
+                book.setTienPhat(rs.getDouble(7));
                 listResult.add(book);
             }
         }

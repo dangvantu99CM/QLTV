@@ -132,7 +132,7 @@ public class UserBookDA implements MyInterface {
             mess.showMessage("error", "Connect to DB failed!");
             return null;
         } else {
-            String sql = baseSql+" WHERE us_id = ? AND delete_at is null";
+            String sql = baseSql+" WHERE us_id = ? AND delete_at is null group by user_book.us_id,user_book.bo_id";
             java.sql.PreparedStatement stmt = con.prepareStatement(sql);
             stmt.setInt(1, us_id);
             ResultSet rs = stmt.executeQuery();
@@ -147,6 +147,7 @@ public class UserBookDA implements MyInterface {
                 book.setBookDateLimit(rs.getInt(19));
                 book.setId_user_book(rs.getInt(1));
                 book.setTienPhat(rs.getDouble(7));
+                book.setSo_ngay_qua_han(rs.getInt(11));
                 listBook.add(book);
             }
         }

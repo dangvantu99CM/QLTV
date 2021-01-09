@@ -78,6 +78,7 @@ public class Manager extends javax.swing.JFrame {
     public Manager() {
         initComponents();
         updateModel(listBooks);
+        this.setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -314,7 +315,7 @@ public class Manager extends javax.swing.JFrame {
     }
 
     private void btnAddBookActionPerformed(java.awt.event.ActionEvent evt) {
-        them_sach them = new them_sach();
+        them_sach them = new them_sach(null);
     }
 
     public void updateModel(ArrayList<Book> listBok) {

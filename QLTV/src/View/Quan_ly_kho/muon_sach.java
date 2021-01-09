@@ -249,6 +249,7 @@ public class muon_sach extends JFrame {
 
             }
         });
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
 

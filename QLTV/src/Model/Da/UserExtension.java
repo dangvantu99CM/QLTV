@@ -13,8 +13,11 @@ public class UserExtension extends User {
 
     private String date_borrow = null;
     private String us_bo_status = null;
+    private int us_bo_date_linmit;
+    private int id_us_bo;
 
-    public UserExtension() {};
+    public UserExtension() {
+    };
         
     public String getDateBorrow() {
         return this.date_borrow;
@@ -22,6 +25,22 @@ public class UserExtension extends User {
 
     public void setDateBorrow(String dateBorrow) {
         this.date_borrow = dateBorrow;
+    }
+
+    public int getUserBookDateLimt() {
+        return this.us_bo_date_linmit;
+    }
+    
+    public void setIdUsBo(int id_us_bo) {
+        this.id_us_bo = id_us_bo;
+    }
+
+    public int getIdUsBo() {
+        return this.id_us_bo;
+    }
+
+    public void setUserBookDateLimt(int us_bo_date_linmit) {
+        this.us_bo_date_linmit = us_bo_date_linmit;
     }
 
     public String getUserBookStatus() {

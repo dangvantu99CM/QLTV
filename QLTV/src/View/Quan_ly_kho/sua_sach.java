@@ -268,5 +268,7 @@ public class sua_sach extends JFrame {
                 }
             }
         });
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 }
