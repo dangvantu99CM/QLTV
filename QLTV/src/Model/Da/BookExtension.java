@@ -12,6 +12,9 @@ package Model.Da;
 public class BookExtension extends Book {
 
     private String storeName;
+    private String dateBorrow;
+    
+    private int id_user_book;
 
     public BookExtension() {}
 
@@ -27,6 +30,28 @@ public class BookExtension extends Book {
      */
     public void setStoreName(String storeName) {
         this.storeName = storeName;
+    }
+    
+    public String getDateBorrow() {
+        return dateBorrow;
+    }
+
+    public void setDateBorrow(String dateBorrow) {
+        this.dateBorrow = dateBorrow;
+    }
+
+    /**
+     * @return the id_user_book
+     */
+    public int getId_user_book() {
+        return id_user_book;
+    }
+
+    /**
+     * @param id_user_book the id_user_book to set
+     */
+    public void setId_user_book(int id_user_book) {
+        this.id_user_book = id_user_book;
     }
     
 }

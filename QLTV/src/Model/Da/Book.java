@@ -18,11 +18,14 @@ public class Book {
     private int status;
     private int type;
     private int number;
-    private String bookDateLimit;
+    private int bookDateLimit;
     private double bookPrice;
     private String deletedAt;
     private int borrowNumber;
     private int emptyNumber;
+    private double tienPhat;
+    
+    private int so_ngay_qua_han;
 
     /**
      * @return the id
@@ -107,6 +110,20 @@ public class Book {
     public void setType(int type) {
         this.type = type;
     }
+    
+    /**
+     * @return the type
+     */
+    public double getTienPhat() {
+        return tienPhat;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setTienPhat(double tienPhat) {
+        this.tienPhat = tienPhat;
+    }
 
     /**
      * @return the number
@@ -125,14 +142,14 @@ public class Book {
     /**
      * @return the bookDateLimit
      */
-    public String getBookDateLimit() {
+    public int getBookDateLimit() {
         return bookDateLimit;
     }
 
     /**
      * @param bookDateLimit the bookDateLimit to set
      */
-    public void setBookDateLimit(String bookDateLimit) {
+    public void setBookDateLimit(int bookDateLimit) {
         this.bookDateLimit = bookDateLimit;
     }
 
@@ -200,5 +217,19 @@ public class Book {
                 + " ,getEmptyNumber " + "=> " + this.getEmptyNumber()
                 + " ]";
         return book;
+    }
+
+    /**
+     * @return the so_ngay_qua_han
+     */
+    public int getSo_ngay_qua_han() {
+        return so_ngay_qua_han;
+    }
+
+    /**
+     * @param so_ngay_qua_han the so_ngay_qua_han to set
+     */
+    public void setSo_ngay_qua_han(int so_ngay_qua_han) {
+        this.so_ngay_qua_han = so_ngay_qua_han;
     }
 }

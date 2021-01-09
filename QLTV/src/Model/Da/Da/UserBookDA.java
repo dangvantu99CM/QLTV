@@ -9,6 +9,9 @@ import BaseClass.BaseClass;
 import Model.Da.User;
 import Database.ConnectDb;
 import Interface.MyInterface;
+import Model.Da.Book;
+import Model.Da.BookExtension;
+import Model.Da.Store;
 import Model.Da.UserBook;
 import View.Thong_bao.Message;
 import com.mysql.jdbc.PreparedStatement;
@@ -35,6 +38,10 @@ public class UserBookDA implements MyInterface {
     public static ArrayList<UserBook> listUserBook = null;
 
     private StoreDA storeDa = new StoreDA();
+    
+    private String baseSql = "SELECT * FROM user_book "
+                    + " JOIN book on user_book.bo_id = book.id "
+                    + " JOIN store on book.bo_id_store = store.id ";
 
     @Override
     public ArrayList getAll() {
@@ -103,5 +110,82 @@ public class UserBookDA implements MyInterface {
             }
         }
         return false;
+    }
+
+    public boolean updateStatus(int id, int status, int soNgayQuaHan, double phat) throws SQLException {
+        String sql = "update user_book set status =?,so_ngay_qua_han =?,VND_recoup =? where id = ? AND user_book.delete_at is null";
+        java.sql.PreparedStatement stmt = con.prepareStatement(sql);
+        stmt.setInt(1, status);
+        stmt.setInt(2, soNgayQuaHan);
+        stmt.setDouble(3, phat);
+        stmt.setInt(4, id);
+        int count = stmt.executeUpdate();
+        if (count > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public ArrayList getAllByUserID(int us_id) throws SQLException {
+        ArrayList<BookExtension> listBook = new ArrayList<>();
+        if (con == null) {
+            mess.showMessage("error", "Connect to DB failed!");
+            return null;
+        } else {
+            String sql = baseSql+" WHERE us_id = ? AND delete_at is null";
+            java.sql.PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, us_id);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                BookExtension book = new BookExtension();
+                book.setId(rs.getInt(3));
+                book.setName(rs.getString(13));
+                book.setAuthor(rs.getString(15));
+                book.setStoreName(rs.getString(28));
+                book.setDateBorrow(rs.getString(4));
+                book.setStatus(rs.getInt(6));
+                book.setBookDateLimit(rs.getInt(19));
+                book.setId_user_book(rs.getInt(1));
+                book.setTienPhat(rs.getDouble(7));
+                listBook.add(book);
+            }
+        }
+        return listBook;
+    }
+
+    public BookExtension getBookExtension(int bo_us_id) throws SQLException {
+        BookExtension book = null;
+        if (con == null) {
+            mess.showMessage("error", "Connect to DB failed!");
+            return null;
+        } else {
+            String sql = baseSql+" WHERE user_book.id = ? AND user_book.delete_at  is null";
+            java.sql.PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, bo_us_id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                book = new BookExtension();
+                book.setId(rs.getInt(3));
+                book.setName(rs.getString(13));
+                book.setAuthor(rs.getString(15));
+                book.setStoreName(rs.getString(28));
+                book.setDateBorrow(rs.getString(4));
+                book.setStatus(rs.getInt(6));
+                book.setBookDateLimit(rs.getInt(19));
+                book.setId_user_book(rs.getInt(1));
+                book.setTienPhat(rs.getDouble(7));
+                book.setStoreID(rs.getInt(14));
+            }
+        }
+        return book;
+    }
+
+    public static void main(String[] args) throws SQLException {
+        UserBookDA u = new UserBookDA();
+        ArrayList<BookExtension> listBook = u.getAllByUserID(38);
+        System.out.println("sssssss == " + listBook.size());
+        for (BookExtension b : listBook) {
+            System.out.println(b.toString());
+        }
     }
 }

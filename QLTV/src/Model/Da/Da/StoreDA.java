@@ -137,4 +137,21 @@ public class StoreDA implements MyInterface {
         }
         return false;
     }
+    
+    public boolean updateStoreWhenPayBook(int storeID) throws SQLException{
+        Store updateStore=  getStoreByID(storeID);
+        if(updateStore == null)return false;
+        String sql = "update store set st_slot_current =?,st_slot_empty =?where id = ? AND store.delete_at is null";
+        java.sql.PreparedStatement stmt = con.prepareStatement(sql);
+        int st_slot_current = updateStore.getSt_slot_current()-1;
+        int st_slot_empty = updateStore.getSt_slot_current()+1;
+        stmt.setInt(1, st_slot_current);
+        stmt.setInt(2, st_slot_empty);
+        stmt.setInt(3, storeID);
+        int count = stmt.executeUpdate();
+        if (count > 0) {
+            return true;
+        }
+        return false;
+    }
 }
